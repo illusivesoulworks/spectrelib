@@ -28,6 +28,7 @@ minecraft {
             mods {
                 modClientRun {
                     source sourceSets.main
+                    source sourceSets.test
                     source project(":common").sourceSets.main
                 }
             }
@@ -69,34 +70,26 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":common")
+    testImplementation project(':common')
 }
 
 tasks.withType(JavaCompile) {
     source(project(":common").sourceSets.main.allSource)
 }
 
-def replaceResources = tasks.register("replaceResources", Copy) {
-    it.outputs.upToDateWhen { false }
-
-    it.from(sourceSets.main.resources) {
-        include "META-INF/mods.toml"
-        expand 'version': version, 'forge_mc_version_range': forge_mc_version_range, 'forge_version_range': forge_version_range,
-                'license': license, 'mod_id': mod_id, 'mod_author': mod_author, 'mod_description': mod_description,
-                'mod_name': mod_name
-    }
-    it.from(project(":common").sourceSets.main.resources) {
-        include "pack.mcmeta"
-        expand 'mod_name': mod_name
-    }
-    it.into "$buildDir/resources/main/"
-}
-
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+def replaceProperties = [
+        version: version, forge_mc_version_range: forge_mc_version_range, forge_version_range: forge_version_range,
+        license: license, mod_id: mod_id, mod_author: mod_author, mod_description: mod_description, mod_name: mod_name
+]
 processResources {
     from project(":common").sourceSets.main.resources
-    duplicatesStrategy(DuplicatesStrategy.FAIL)
-    exclude('META-INF/mods.toml')
-    exclude('pack.mcmeta')
-    configure { finalizedBy(replaceResources) }
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
 }
 
 jar.finalizedBy('reobfJar')

@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[41,)"
+license="LGPL-2.1-only"
+[[mods]]
+modId="spectretest"
+version="1.0.0"
+displayName="SpectreTest"
+authors="Illusive Soulworks"
+description='''
+A test mod for SpectreLib.
+'''
+[[mods]]
+modId="spectrelib"
+version="1.0.0"
+displayName="SpectreLib"
+authors="Illusive Soulworks"
+description='''
+Cross-platform library for Illusive Soulworks mods.
+'''
+[[dependencies.spectretest]]
+    modId="forge"
+    mandatory=true
+    versionRange="[41,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.spectretest]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20,)"
+    ordering="NONE"
+    side="BOTH"
