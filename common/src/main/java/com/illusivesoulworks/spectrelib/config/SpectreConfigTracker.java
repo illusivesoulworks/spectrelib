@@ -31,7 +31,6 @@ import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.platform.Services;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -43,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.io.FilenameUtils;
 
 public class SpectreConfigTracker {
 
@@ -81,62 +81,26 @@ public class SpectreConfigTracker {
         config.getFileName(), config.getModId());
   }
 
-  void loadDefaultConfigs() {
-    SpectreConstants.LOG.debug(CONFIG, "Loading default configs");
+  void loadGlobalConfigs() {
+    SpectreConstants.LOG.debug(CONFIG, "Loading global configs");
     this.files.values().forEach(config -> {
       SpectreConstants.LOG.trace(CONFIG, "Loading config file type {} at {} for {}",
           config.getType(), config.getFileName(), config.getModId());
-      boolean alreadyExists =
-          Files.exists(Services.CONFIG.getDefaultConfigPath().resolve(config.getFileName()));
-      final CommentedFileConfig configData =
-          read(Services.CONFIG.getDefaultConfigPath()).apply(config);
-      SpectreConfig.InstanceType type = SpectreConfig.InstanceType.DEFAULT;
+      Path path = Services.CONFIG.getGlobalConfigPath();
+      boolean alreadyExists = Files.exists(path.resolve(config.getFileName()));
+      final CommentedFileConfig configData = read(path).apply(config);
+      SpectreConfig.InstanceType type = SpectreConfig.InstanceType.GLOBAL;
       config.setConfigData(type, configData, !alreadyExists);
-      config.fireLoad();
+      config.fireLoad(false);
       config.save(type);
-    });
-  }
-
-  void loadLocalConfigs() {
-    Path path = Services.CONFIG.getLocalConfigPath();
-
-    if (!Files.isDirectory(path)) {
-      try {
-        Files.createDirectory(path);
-      } catch (IOException e) {
-
-        if (e instanceof FileAlreadyExistsException) {
-          SpectreConstants.LOG.error(SpectreConfigLoader.CONFIG,
-              "Failed to create {} directory due to an intervening file", path);
-        } else {
-          SpectreConstants.LOG.error(SpectreConfigLoader.CONFIG,
-              "Failed to create {} directory due to an unknown error", path, e);
-        }
-        throw new RuntimeException("Failed to create directory", e);
-      }
-    } else {
-      SpectreConstants.LOG.debug(SpectreConfigLoader.CONFIG, "Found existing directory : {}", path);
-    }
-    SpectreConfig.InstanceType type = SpectreConfig.InstanceType.LOCAL;
-    SpectreConstants.LOG.debug(CONFIG, "Loading {} configs from {}", type.id(), path);
-    this.files.values().forEach(config -> {
-      Path configPath = path.resolve(config.getFileName());
-
-      if (Files.exists(configPath)) {
-        SpectreConstants.LOG.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
-            config.getType(), config.getFileName(), path, config.getModId());
-        final CommentedFileConfig configData = read(path).apply(config);
-        config.setConfigData(type, configData, false);
-        config.fireLoad();
-        config.save(type);
-      }
     });
   }
 
   void loadServerConfigs(MinecraftServer server) {
     Path configDir = Services.CONFIG.getServerConfigPath(server);
     SpectreConfig.InstanceType type = SpectreConfig.InstanceType.SERVER;
-    SpectreConstants.LOG.debug(CONFIG, "Loading {} configs from {}", type.id(), configDir);
+    SpectreConstants.LOG.debug(CONFIG, "Loading {} configs from {} on server", type.id(),
+        configDir);
     this.files.values().forEach(config -> {
       Path dir = null;
       String name = config.getFileName();
@@ -145,18 +109,11 @@ public class SpectreConfigTracker {
       if (Files.exists(configPath)) {
         dir = configDir;
       } else {
-        Path localDir = Services.CONFIG.getLocalConfigPath();
-        Path localPath = localDir.resolve(name);
+        Path globalDir = Services.CONFIG.getGlobalConfigPath();
+        Path globalPath = globalDir.resolve(name);
 
-        if (Files.exists(localPath)) {
-          dir = localDir;
-        } else {
-          Path defaultDir = Services.CONFIG.getDefaultConfigPath();
-          Path defaultPath = defaultDir.resolve(name);
-
-          if (Files.exists(defaultPath)) {
-            dir = defaultDir;
-          }
+        if (Files.exists(globalPath)) {
+          dir = globalDir;
         }
       }
 
@@ -165,7 +122,7 @@ public class SpectreConfigTracker {
             config.getType(), config.getFileName(), dir, config.getModId());
         final CommentedFileConfig configData = read(dir).apply(config);
         config.setConfigData(type, configData, false);
-        config.fireLoad();
+        config.fireLoad(false);
         config.save(type);
       }
     });
@@ -186,15 +143,32 @@ public class SpectreConfigTracker {
       configData.load();
     } catch (ParsingException e) {
       try {
-        Files.delete(configData.getNioPath());
+        Path path = configData.getNioPath();
+        backupConfig(path);
+        Files.delete(path);
         configData.load();
-        SpectreConstants.LOG.warn("Configuration file {} could not be parsed. Correcting",
-            configData.getNioPath());
+        SpectreConstants.LOG.warn("Configuration file {} could not be parsed. Correcting", path);
         return;
       } catch (Throwable t) {
         e.addSuppressed(t);
       }
       throw e;
+    }
+  }
+
+  private static void backupConfig(Path path) {
+
+    if (Files.exists(path)) {
+      Path dir = path.getParent();
+      String fileName = path.getFileName().toString();
+      String extension = FilenameUtils.getExtension(fileName) + ".bak";
+      fileName = FilenameUtils.removeExtension(fileName);
+
+      try {
+        Files.copy(path, dir.resolve(fileName + "." + extension));
+      } catch (IOException e) {
+        SpectreConstants.LOG.warn("Failed to backup configuration file {}", path, e);
+      }
     }
   }
 
@@ -269,7 +243,7 @@ public class SpectreConfigTracker {
       final CommentedConfig configData =
           TomlFormat.instance().createParser().parse(new ByteArrayInputStream(data));
       configFile.setConfigData(SpectreConfig.InstanceType.SERVER, configData, false);
-      configFile.fireReload();
+      configFile.fireLoad(true);
     }
   }
 

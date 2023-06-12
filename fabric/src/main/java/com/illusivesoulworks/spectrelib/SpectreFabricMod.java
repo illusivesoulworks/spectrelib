@@ -21,7 +21,6 @@ import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import io.netty.buffer.Unpooled;
 import java.util.List;
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -30,7 +29,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public class SpectreFabricMod implements ModInitializer, DedicatedServerModInitializer {
+public class SpectreFabricMod implements ModInitializer {
 
   public static final ResourceLocation CONFIG_SYNC =
       new ResourceLocation(SpectreConstants.MOD_ID, "config_sync");
@@ -50,11 +49,5 @@ public class SpectreFabricMod implements ModInitializer, DedicatedServerModIniti
       ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
           new FriendlyByteBuf(Unpooled.buffer()));
     });
-  }
-
-  // todo: Remove in 1.20
-  @Override
-  public void onInitializeServer() {
-    SpectreConfigEvents.onLoadDefaultAndLocal();
   }
 }

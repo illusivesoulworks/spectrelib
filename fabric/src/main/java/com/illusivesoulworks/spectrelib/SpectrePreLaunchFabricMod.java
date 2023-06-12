@@ -18,7 +18,7 @@
 package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
+import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
@@ -30,9 +30,9 @@ public class SpectrePreLaunchFabricMod implements PreLaunchEntrypoint {
   public void onPreLaunch() {
 
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-      EntrypointUtils.invoke("spectrelib", SpectreConfigInitializer.class,
-          SpectreConfigInitializer::onInitializeConfig);
-      SpectreConfigEvents.onLoadDefaultAndLocal();
+      EntrypointUtils.invoke("spectrelib", SpectreLibInitializer.class,
+          SpectreLibInitializer::onInitializeConfig);
+      SpectreConfigEvents.onLoadGlobal();
     }
   }
 }

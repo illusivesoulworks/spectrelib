@@ -41,13 +41,8 @@ public class QuiltConfigHelper implements IConfigHelper {
   }
 
   @Override
-  public Path getDefaultConfigPath() {
+  public Path getGlobalConfigPath() {
     return gameDir.resolve("config");
-  }
-
-  @Override
-  public Path getLocalConfigPath() {
-    return gameDir.resolve("localconfigs");
   }
 
   @Override

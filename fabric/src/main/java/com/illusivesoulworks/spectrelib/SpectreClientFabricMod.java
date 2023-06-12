@@ -18,8 +18,8 @@
 package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
 import com.illusivesoulworks.spectrelib.platform.FabricConfigHelper;
 import java.io.File;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,8 +32,6 @@ public class SpectreClientFabricMod implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    // todo: Remove in 1.20
-    SpectreConfigEvents.onLoadDefaultAndLocal();
     ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 
       if (!client.isLocalServer()) {
@@ -49,13 +47,9 @@ public class SpectreClientFabricMod implements ClientModInitializer {
 
   public static void prepareConfigs(GameConfig gameConfig) {
     File file = gameConfig.location.gameDirectory;
-
-    if (file == null) {
-      file = new File(".");
-    }
     FabricConfigHelper.gameDir = file.toPath();
-    EntrypointUtils.invoke("spectrelib", SpectreConfigInitializer.class,
-        SpectreConfigInitializer::onInitializeConfig);
-    SpectreConfigEvents.onLoadDefaultAndLocal();
+    EntrypointUtils.invoke("spectrelib", SpectreLibInitializer.class,
+        SpectreLibInitializer::onInitializeConfig);
+    SpectreConfigEvents.onLoadGlobal();
   }
 }

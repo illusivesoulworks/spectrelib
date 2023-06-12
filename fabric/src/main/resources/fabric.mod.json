@@ -16,9 +16,6 @@
       "client": [
         "com.illusivesoulworks.spectrelib.SpectreClientFabricMod"
       ],
-      "server": [
-        "com.illusivesoulworks.spectrelib.SpectreFabricMod"
-      ],
       "preLaunch": [
         "com.illusivesoulworks.spectrelib.SpectrePreLaunchFabricMod"
       ]

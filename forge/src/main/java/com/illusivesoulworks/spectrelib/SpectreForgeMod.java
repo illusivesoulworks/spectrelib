@@ -52,7 +52,7 @@ public class SpectreForgeMod {
   }
 
   private void loadConfigs(final NewRegistryEvent evt) {
-    SpectreConfigEvents.onLoadDefaultAndLocal();
+    SpectreConfigEvents.onLoadGlobal();
   }
 
   private void setup(final FMLCommonSetupEvent evt) {

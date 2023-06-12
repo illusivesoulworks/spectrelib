@@ -110,24 +110,7 @@ public class SpectreConfigSpec {
         SpectreConstants.LOG.warn(CONFIG, "Configuration file {} is not correct. Correcting",
             configName);
       }
-      correct(configData,
-          (action, path, incorrectValue, correctedValue) -> {
-
-            if (shouldLog) {
-              SpectreConstants.LOG.warn(CONFIG,
-                  "Incorrect key {} was corrected from {} to its default, {}. {}",
-                  DOT_JOINER.join(path), incorrectValue, correctedValue,
-                  incorrectValue == correctedValue ? "This seems to be an error." : "");
-            }
-          },
-          (action, path, incorrectValue, correctedValue) -> {
-
-            if (shouldLog) {
-              SpectreConstants.LOG.debug(CONFIG,
-                  "The comment on key {} does not match the spec. This may create a backup.",
-                  DOT_JOINER.join(path));
-            }
-          });
+      this.correct(configData, shouldLog);
 
       if (configData instanceof FileConfig) {
         ((FileConfig) configData).save();
@@ -169,38 +152,54 @@ public class SpectreConfigSpec {
 
   public synchronized boolean isCorrect(CommentedConfig config) {
     LinkedList<String> parentPath = new LinkedList<>();
-    return correct(this.spec, config, parentPath, Collections.unmodifiableList(parentPath),
-        (a, b, c, d) -> {
-        }, null, true) == 0;
+    return
+        this.correct(this.spec, config, null, parentPath, Collections.unmodifiableList(parentPath),
+            (a, b, c, d) -> {
+            }, null, true) == 0;
   }
 
-  public synchronized void correct(CommentedConfig config, ConfigSpec.CorrectionListener listener,
-                                   ConfigSpec.CorrectionListener commentListener) {
+  public synchronized void correct(CommentedConfig config, boolean shouldLog) {
     LinkedList<String> parentPath = new LinkedList<>();
     try {
       isCorrecting = true;
-      correct(this.spec, config, parentPath, Collections.unmodifiableList(parentPath), listener,
-          commentListener, false);
+      Map<String, Object> defaultMap = null;
+
+      if (config instanceof FileConfig fileConfig) {
+        defaultMap = SpectreConfigTracker.INSTANCE.getDefaultConfigs()
+            .get(fileConfig.getNioPath().getFileName().toString().intern());
+      }
+      this.correct(this.spec, config, defaultMap, parentPath,
+          Collections.unmodifiableList(parentPath),
+          (action, path, incorrectValue, correctedValue) -> {
+
+            if (shouldLog) {
+              SpectreConstants.LOG.warn(CONFIG,
+                  "Incorrect key {} was corrected from {} to its default, {}. {}",
+                  DOT_JOINER.join(path), incorrectValue, correctedValue,
+                  incorrectValue == correctedValue ? "This seems to be an error." : "");
+            }
+          },
+          (action, path, incorrectValue, correctedValue) -> {
+
+            if (shouldLog) {
+              SpectreConstants.LOG.debug(CONFIG,
+                  "The comment on key {} does not match the spec. This may create a backup.",
+                  DOT_JOINER.join(path));
+            }
+          }, false);
     } finally {
       isCorrecting = false;
     }
   }
 
   private int correct(UnmodifiableConfig spec, CommentedConfig config,
+                      @Nullable Map<String, Object> defaultValues,
                       LinkedList<String> parentPath, List<String> parentPathUnmodifiable,
                       ConfigSpec.CorrectionListener listener,
                       ConfigSpec.CorrectionListener commentListener, boolean dryRun) {
     int count = 0;
     Map<String, Object> specMap = spec.valueMap();
     Map<String, Object> configMap = config.valueMap();
-    final Map<String, Object> defaultMap;
-
-    if (config instanceof FileConfig fileConfig) {
-      defaultMap = SpectreConfigTracker.INSTANCE.getDefaultConfigs()
-          .get(fileConfig.getNioPath().getFileName().toString().intern());
-    } else {
-      defaultMap = null;
-    }
 
     for (Map.Entry<String, Object> specEntry : specMap.entrySet()) {
       final String key = specEntry.getKey();
@@ -210,9 +209,12 @@ public class SpectreConfigSpec {
       parentPath.addLast(key);
 
       if (specValue instanceof Config) {
+        Map<String, Object> map =
+            defaultValues != null && defaultValues.get(key) instanceof Config defaultConfig ?
+                defaultConfig.valueMap() : null;
 
         if (configValue instanceof CommentedConfig) {
-          count += correct((Config) specValue, (CommentedConfig) configValue, parentPath,
+          count += this.correct((Config) specValue, (CommentedConfig) configValue, map, parentPath,
               parentPathUnmodifiable, listener, commentListener, dryRun);
 
           if (count > 0 && dryRun) {
@@ -226,13 +228,13 @@ public class SpectreConfigSpec {
           listener.onCorrect(action, parentPathUnmodifiable, configValue, newValue);
           count++;
           count +=
-              correct((Config) specValue, newValue, parentPath, parentPathUnmodifiable, listener,
-                  commentListener, dryRun);
+              this.correct((Config) specValue, newValue, map, parentPath, parentPathUnmodifiable,
+                  listener, commentListener, dryRun);
         }
         String newComment = levelComments.get(parentPath);
         String oldComment = config.getComment(key);
 
-        if (!stringsMatchIgnoringNewlines(oldComment, newComment)) {
+        if (!this.stringsMatchIgnoringNewlines(oldComment, newComment)) {
 
           if (commentListener != null) {
             commentListener.onCorrect(action, parentPathUnmodifiable, oldComment, newComment);
@@ -253,8 +255,8 @@ public class SpectreConfigSpec {
           }
           Object newValue;
 
-          if (defaultMap != null && defaultMap.containsKey(key)) {
-            newValue = defaultMap.get(key);
+          if (defaultValues != null && defaultValues.containsKey(key)) {
+            newValue = defaultValues.get(key);
 
             if (!valueSpec.test(newValue)) {
               newValue = valueSpec.correct(configValue);
@@ -268,7 +270,7 @@ public class SpectreConfigSpec {
         }
         String oldComment = config.getComment(key);
 
-        if (!stringsMatchIgnoringNewlines(oldComment, valueSpec.getComment())) {
+        if (!this.stringsMatchIgnoringNewlines(oldComment, valueSpec.getComment())) {
 
           if (commentListener != null) {
             commentListener.onCorrect(action, parentPathUnmodifiable, oldComment,

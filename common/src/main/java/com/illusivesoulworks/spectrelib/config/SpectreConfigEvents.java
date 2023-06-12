@@ -21,17 +21,8 @@ import net.minecraft.server.MinecraftServer;
 
 public class SpectreConfigEvents {
 
-  public static void onLoadDefaultAndLocal() {
-    onLoadDefault();
-    onLoadLocal();
-  }
-
-  private static void onLoadDefault() {
-    SpectreConfigTracker.INSTANCE.loadDefaultConfigs();
-  }
-
-  private static void onLoadLocal() {
-    SpectreConfigTracker.INSTANCE.loadLocalConfigs();
+  public static void onLoadGlobal() {
+    SpectreConfigTracker.INSTANCE.loadGlobalConfigs();
   }
 
   public static void onLoadServer(final MinecraftServer server) {

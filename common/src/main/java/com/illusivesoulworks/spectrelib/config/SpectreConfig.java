@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
@@ -35,8 +36,8 @@ public class SpectreConfig {
   private final String modId;
   private final EnumMap<InstanceType, CommentedConfig> configData =
       new EnumMap<>(InstanceType.class);
-  private final List<Consumer<SpectreConfig>> loadListeners = new ArrayList<>();
-  private final List<Consumer<SpectreConfig>> reloadListeners = new ArrayList<>();
+  private final List<BiConsumer<SpectreConfig, Boolean>> loadListeners = new ArrayList<>();
+  private final List<Consumer<SpectreConfig>> saveListeners = new ArrayList<>();
 
   public SpectreConfig(Type type, SpectreConfigSpec spec, String modId, String fileName) {
     this.type = type;
@@ -77,10 +78,8 @@ public class SpectreConfig {
 
     if (this.configData.containsKey(InstanceType.SERVER)) {
       return this.getConfigData(InstanceType.SERVER);
-    } else if (this.configData.containsKey(InstanceType.LOCAL)) {
-      return this.getConfigData(InstanceType.LOCAL);
     }
-    return this.getConfigData(InstanceType.DEFAULT);
+    return this.getConfigData(InstanceType.GLOBAL);
   }
 
   void setConfigData(InstanceType type, @Nonnull final CommentedConfig configData, boolean create) {
@@ -90,9 +89,7 @@ public class SpectreConfig {
 
   public void clearServerConfigData() {
     this.configData.remove(InstanceType.SERVER);
-    this.getSpec().setConfigData(this.getConfigData(
-        this.configData.containsKey(InstanceType.LOCAL) ? InstanceType.LOCAL :
-            InstanceType.DEFAULT), false);
+    this.getSpec().setConfigData(this.getConfigData(InstanceType.GLOBAL), false);
   }
 
   public void save(InstanceType type) {
@@ -110,25 +107,14 @@ public class SpectreConfig {
     return ((CommentedFileConfig) this.getActiveConfigData()).getNioPath();
   }
 
-  public void addLoadListener(Consumer<SpectreConfig> listener) {
+  public void addLoadListener(BiConsumer<SpectreConfig, Boolean> listener) {
     this.loadListeners.add(listener);
   }
 
-  public void addReloadListener(Consumer<SpectreConfig> listener) {
-    this.reloadListeners.add(listener);
-  }
+  public void fireLoad(boolean isReloading) {
 
-  public void fireLoad() {
-
-    for (Consumer<SpectreConfig> loadListener : this.loadListeners) {
-      loadListener.accept(this);
-    }
-  }
-
-  public void fireReload() {
-
-    for (Consumer<SpectreConfig> reloadListener : this.reloadListeners) {
-      reloadListener.accept(this);
+    for (BiConsumer<SpectreConfig, Boolean> loadListener : this.loadListeners) {
+      loadListener.accept(this, isReloading);
     }
   }
 
@@ -143,8 +129,7 @@ public class SpectreConfig {
   }
 
   public enum InstanceType {
-    DEFAULT,
-    LOCAL,
+    GLOBAL,
     SERVER;
 
     public String id() {

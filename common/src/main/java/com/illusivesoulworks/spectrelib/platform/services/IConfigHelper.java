@@ -24,9 +24,7 @@ public interface IConfigHelper {
 
   Path getBackwardsCompatiblePath();
 
-  Path getDefaultConfigPath();
-
-  Path getLocalConfigPath();
+  Path getGlobalConfigPath();
 
   Path getServerConfigPath(final MinecraftServer server);
 

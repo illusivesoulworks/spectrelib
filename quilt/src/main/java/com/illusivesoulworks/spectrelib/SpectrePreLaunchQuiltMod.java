@@ -18,7 +18,7 @@
 package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
+import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
 import net.fabricmc.api.EnvType;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.entrypoint.PreLaunchEntrypoint;
@@ -31,9 +31,9 @@ public class SpectrePreLaunchQuiltMod implements PreLaunchEntrypoint {
   public void onPreLaunch(ModContainer mod) {
 
     if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.SERVER) {
-      EntrypointUtils.invoke("spectrelib", SpectreConfigInitializer.class,
-          SpectreConfigInitializer::onInitializeConfig);
-      SpectreConfigEvents.onLoadDefaultAndLocal();
+      EntrypointUtils.invoke("spectrelib", SpectreLibInitializer.class,
+          SpectreLibInitializer::onInitializeConfig);
+      SpectreConfigEvents.onLoadGlobal();
     }
   }
 }

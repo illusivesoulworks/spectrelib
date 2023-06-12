@@ -19,7 +19,7 @@ package com.illusivesoulworks.spectrelib.config;
 
 import org.quiltmc.loader.api.ModContainer;
 
-public interface SpectreConfigInitializer {
+public interface SpectreLibInitializer {
 
   void onInitializeConfig(ModContainer modContainer);
 }

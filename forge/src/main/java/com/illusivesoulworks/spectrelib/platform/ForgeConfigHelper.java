@@ -18,15 +18,15 @@
 package com.illusivesoulworks.spectrelib.platform;
 
 import com.illusivesoulworks.spectrelib.platform.services.IConfigHelper;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLConfig;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.loading.FileUtils;
 
 public class ForgeConfigHelper implements IConfigHelper {
 
@@ -38,19 +38,21 @@ public class ForgeConfigHelper implements IConfigHelper {
   }
 
   @Override
-  public Path getDefaultConfigPath() {
+  public Path getGlobalConfigPath() {
     return FMLPaths.CONFIGDIR.get();
-  }
-
-  @Override
-  public Path getLocalConfigPath() {
-    return FMLPaths.GAMEDIR.get().resolve("localconfigs");
   }
 
   @Override
   public Path getServerConfigPath(final MinecraftServer server) {
     final Path serverConfig = server.getWorldPath(SERVERCONFIG);
-    FileUtils.getOrCreateDirectory(serverConfig, "serverconfig");
+
+    if (!Files.isDirectory(serverConfig)) {
+      try {
+        Files.createDirectories(serverConfig);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
     return serverConfig;
   }
 

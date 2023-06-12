@@ -18,8 +18,8 @@
 package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
 import com.illusivesoulworks.spectrelib.platform.QuiltConfigHelper;
 import java.io.File;
 import net.minecraft.client.main.GameConfig;
@@ -33,14 +33,10 @@ public class SpectreClientQuiltMod implements ClientModInitializer {
 
   public static void prepareConfigs(GameConfig gameConfig) {
     File file = gameConfig.location.gameDirectory;
-
-    if (file == null) {
-      file = new File(".");
-    }
     QuiltConfigHelper.gameDir = file.toPath();
-    EntrypointUtils.invoke("spectrelib", SpectreConfigInitializer.class,
-        SpectreConfigInitializer::onInitializeConfig);
-    SpectreConfigEvents.onLoadDefaultAndLocal();
+    EntrypointUtils.invoke("spectrelib", SpectreLibInitializer.class,
+        SpectreLibInitializer::onInitializeConfig);
+    SpectreConfigEvents.onLoadGlobal();
   }
 
   @Override
