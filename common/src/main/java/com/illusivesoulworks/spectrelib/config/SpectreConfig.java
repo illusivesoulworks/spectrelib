@@ -82,7 +82,7 @@ public class SpectreConfig {
     return this.getConfigData(InstanceType.GLOBAL);
   }
 
-  void setConfigData(InstanceType type, @Nonnull final CommentedConfig configData, boolean create) {
+  public void setConfigData(InstanceType type, @Nonnull final CommentedConfig configData, boolean create) {
     this.configData.put(type, configData);
     this.getSpec().setConfigData(configData, create);
   }

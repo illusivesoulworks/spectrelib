@@ -82,19 +82,19 @@ public class SpectreConfigSpec {
   }
 
   public String getLevelComment(List<String> path) {
-    return levelComments.get(path);
+    return this.levelComments.get(path);
   }
 
   public String getLevelLocalizationKey(List<String> path) {
-    return levelLocalizationKeys.get(path);
+    return this.levelLocalizationKeys.get(path);
   }
 
   public UnmodifiableConfig getValues() {
-    return values;
+    return this.values;
   }
 
   public UnmodifiableConfig getSpec() {
-    return spec;
+    return this.spec;
   }
 
   public void setConfigData(final CommentedConfig configData, boolean create) {
@@ -1326,6 +1326,10 @@ public class SpectreConfigSpec {
       super(parent, path, defaultSupplier);
       this.converter = converter;
       this.clazz = clazz;
+    }
+
+    public Class<T> getEnumClass() {
+      return this.clazz;
     }
 
     @Override

@@ -236,6 +236,10 @@ public class SpectreConfigTracker {
     return ImmutableMap.copyOf(this.defaultConfigs);
   }
 
+  public Map<String, Map<SpectreConfig.Type, Set<SpectreConfig>>> getConfigsByMod() {
+    return ImmutableMap.copyOf(this.configsByMod);
+  }
+
   public void acceptSyncedConfigs(String fileName, byte[] data) {
     SpectreConfig configFile = this.files.get(fileName);
 

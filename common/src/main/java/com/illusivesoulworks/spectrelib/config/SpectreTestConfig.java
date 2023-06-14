@@ -45,21 +45,22 @@ public class SpectreTestConfig {
 
     public Test(SpectreConfigSpec.Builder builder) {
 
-      this.intValue = builder.comment("Integer Value Comment").defineInRange("intVal", 0, -10, 10);
+      this.intValue = builder.comment("Integer Value Comment").translation("gui.intValue.name")
+          .defineInRange("intVal", 0, -10, 10);
       this.doubleValue =
           builder.comment("Double Value Comment").defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
       this.booleanValue = builder.comment("Boolean Value Comment").define("booleanValue", false);
       this.longValue =
           builder.comment("Long Value Comment").defineInRange("longValue", 0L, -10L, 10L);
 
-      builder.comment("Nested Comment").push("nested");
+      builder.push("nested");
       this.stringValue =
           builder.comment("String Value Comment").define("stringValue", "String Value");
       this.enumValue =
           builder.comment("Enum Value Comment").defineEnum("enumValue", ArmorMaterials.CHAIN);
       builder.pop();
 
-      builder.push("second nested");
+      builder.comment("Nested Comment").push("second nested");
       this.stringList = builder.comment("String List Comment")
           .defineList("stringList", Arrays.asList("first", "second", "third"),
               s -> s instanceof String);
