@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
     id 'idea'
 }
@@ -18,7 +18,7 @@ dependencies {
     implementation project(":common")
 
     modCompileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
-    modRuntimeOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 
     implementation group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
     implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.5'
