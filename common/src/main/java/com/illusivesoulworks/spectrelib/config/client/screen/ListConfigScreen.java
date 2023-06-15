@@ -105,6 +105,10 @@ public class ListConfigScreen extends Screen {
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
       }
+
+      if (this.children().size() == 0) {
+        this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
+      }
     }
 
     void addEmptyEntry(int index) {
@@ -113,6 +117,10 @@ public class ListConfigScreen extends Screen {
 
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
+      }
+
+      if (this.children().size() == 0) {
+        this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
       }
     }
 
@@ -123,42 +131,56 @@ public class ListConfigScreen extends Screen {
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
       }
+
+      if (this.children().size() == 0) {
+        this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
+      }
     }
   }
 
   public final class Entry extends ContainerObjectSelectionList.Entry<ListConfigScreen.Entry> {
-    private final EditBox input;
+    private EditBox input = null;
     private final Button addButton;
-    private final Button removeButton;
+    private Button removeButton = null;
     private final List<AbstractWidget> children = new ArrayList<>();
 
     public Entry(int index, int width) {
-      String currentValue = ListConfigScreen.this.values.get(index);
-      this.input = new EditBox(Objects.requireNonNull(ListConfigScreen.this.minecraft).font, 10, 5,
-          width - 45, 20, Component.literal(currentValue));
-      this.input.setValue(currentValue);
-      this.input.setResponder((newValue) -> {
-        List<String> test = new ArrayList<>(ListConfigScreen.this.values);
-        test.set(index, newValue);
 
-        if (ListConfigScreen.this.validator.test(test)) {
-          this.input.setTextColor(14737632);
-          ListConfigScreen.this.values.set(index, newValue);
-          ListConfigScreen.this.clearInvalid(index);
-        } else {
-          this.input.setTextColor(16711680);
-          ListConfigScreen.this.markInvalid(index);
-        }
-      });
+      if (index >= 0) {
+        String currentValue = ListConfigScreen.this.values.get(index);
+        this.input =
+            new EditBox(Objects.requireNonNull(ListConfigScreen.this.minecraft).font, 10, 5,
+                width - 45, 20, Component.literal(currentValue));
+        this.input.setValue(currentValue);
+        this.input.setResponder((newValue) -> {
+          List<String> test = new ArrayList<>(ListConfigScreen.this.values);
+          test.set(index, newValue);
+
+          if (ListConfigScreen.this.validator.test(test)) {
+            this.input.setTextColor(14737632);
+            ListConfigScreen.this.values.set(index, newValue);
+            ListConfigScreen.this.clearInvalid(index);
+          } else {
+            this.input.setTextColor(16711680);
+            ListConfigScreen.this.markInvalid(index);
+          }
+        });
+        this.removeButton = Button.builder(Component.literal("-"), (b) -> {
+          ListConfigScreen.this.listConfig.removeEntry(index);
+        }).bounds(10, 5, 20, 20).build();
+      }
       this.addButton = Button.builder(Component.literal("+"), (b) -> {
         ListConfigScreen.this.listConfig.addEmptyEntry(index + 1);
       }).bounds(10, 5, 20, 20).build();
-      this.removeButton = Button.builder(Component.literal("-"), (b) -> {
-        ListConfigScreen.this.listConfig.removeEntry(index);
-      }).bounds(10, 5, 20, 20).build();
-      this.children.add(this.input);
+
+      if (this.input != null) {
+        this.children.add(this.input);
+      }
       this.children.add(this.addButton);
-      this.children.add(this.removeButton);
+
+      if (this.removeButton != null) {
+        this.children.add(this.removeButton);
+      }
     }
 
     @Nonnull
@@ -174,15 +196,21 @@ public class ListConfigScreen extends Screen {
     public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
-      this.input.setX(x);
-      this.input.setY(y);
-      this.input.render(guiGraphics, mouseX, mouseY, delta);
+
+      if (this.input != null) {
+        this.input.setX(x);
+        this.input.setY(y);
+        this.input.render(guiGraphics, mouseX, mouseY, delta);
+      }
       this.addButton.setX(x + offset - 42);
       this.addButton.setY(y);
       this.addButton.render(guiGraphics, mouseX, mouseY, delta);
-      this.removeButton.setX(x + offset - 20);
-      this.removeButton.setY(y);
-      this.removeButton.render(guiGraphics, mouseX, mouseY, delta);
+
+      if (this.removeButton != null) {
+        this.removeButton.setX(x + offset - 20);
+        this.removeButton.setY(y);
+        this.removeButton.render(guiGraphics, mouseX, mouseY, delta);
+      }
     }
   }
 }
