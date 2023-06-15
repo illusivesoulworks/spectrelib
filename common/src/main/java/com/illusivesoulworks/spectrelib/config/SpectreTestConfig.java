@@ -51,7 +51,7 @@ public class SpectreTestConfig {
           .defineInRange("intVal", 0, -10, 10);
       this.doubleValue = builder.comment("Double Value Comment").translation("gui.doubleValue")
           .defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
-      this.booleanValue = builder.comment("Boolean Value Comment").define("booleanValue", false);
+      this.booleanValue = builder.comment("B\nNew Line").define("booleanValue", false);
       this.booleanValue1 = builder.comment("Boolean Value Comment").define("booleanValue1", false);
       this.booleanValue2 = builder.comment("Boolean Value Comment").define("booleanValue2", false);
       this.longValue =

@@ -155,20 +155,25 @@ public class EditConfigScreen extends Screen {
             for (String s : comment.split("\n")) {
               commentComponents.add(Component.literal(s));
             }
-            builder.addAll(commentComponents.stream().map(Component::getVisualOrderText).toList());
+            for (Component commentComponent : commentComponents) {
+              EditConfigScreen.this.font.split(commentComponent, 150).forEach(builder::add);
+            }
             s2 =
                 commentComponents.stream().map(Component::getString).collect(Collectors.joining()) +
                     defaultComponent.getString();
           }
 
           if (!range.isBlank()) {
-            builder.add(
-                Component.literal(range).withStyle(ChatFormatting.GREEN).getVisualOrderText());
+            EditConfigScreen.this.font.split(
+                    Component.literal(range).withStyle(ChatFormatting.GREEN), 150)
+                .forEach(builder::add);
           } else if (!allowed.isBlank()) {
-            builder.add(
-                Component.literal(allowed).withStyle(ChatFormatting.GREEN).getVisualOrderText());
+            EditConfigScreen.this.font.split(
+                    Component.literal(allowed).withStyle(ChatFormatting.GREEN), 150)
+                .forEach(builder::add);
           }
-          list = builder.add(defaultComponent.getVisualOrderText()).build();
+          EditConfigScreen.this.font.split(defaultComponent, 150).forEach(builder::add);
+          list = builder.build();
           Object current = specValues.get(key);
 
           if (current instanceof SpectreConfigSpec.IntValue) {
@@ -496,8 +501,9 @@ public class EditConfigScreen extends Screen {
             }
             return Component.literal("ERROR");
           })
-          .withInitialValue(EditConfigScreen.this.values.get(key).toString())
           .withValues(clazz.getEnumConstants())
+          .withInitialValue(
+              EnumUtils.getEnum(clazz, (String) EditConfigScreen.this.values.get(key)))
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
           .create(10, 5, 100, 20, pLabel,
