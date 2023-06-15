@@ -43,6 +43,9 @@
       "license": "${license}"
     }
   },
+  "modmenu": {
+    "badges": ["library"]
+  },
   "mixin": [
     "spectrelib.mixins.json"
   ],
