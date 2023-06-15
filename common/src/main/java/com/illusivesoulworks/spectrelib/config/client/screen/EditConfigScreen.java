@@ -279,8 +279,7 @@ public class EditConfigScreen extends Screen {
     public BooleanConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                               String p_101103_, String key) {
       super(pTooltip, pLabel);
-      this.checkbox = CycleButton.onOffBuilder(
-              ((SpectreConfigSpec.BooleanValue) EditConfigScreen.this.specValues.get(key)).get())
+      this.checkbox = CycleButton.onOffBuilder((Boolean) EditConfigScreen.this.values.get(key))
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
           .create(10, 5, 44, 20, pLabel,
@@ -307,9 +306,7 @@ public class EditConfigScreen extends Screen {
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
-      this.input.setValue(
-          ((SpectreConfigSpec.IntValue) EditConfigScreen.this.specValues.get(key)).get()
-              .toString());
+      this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
 
@@ -355,9 +352,7 @@ public class EditConfigScreen extends Screen {
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
-      this.input.setValue(
-          ((SpectreConfigSpec.LongValue) EditConfigScreen.this.specValues.get(key)).get()
-              .toString());
+      this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
 
@@ -403,9 +398,7 @@ public class EditConfigScreen extends Screen {
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
-      this.input.setValue(
-          ((SpectreConfigSpec.DoubleValue) EditConfigScreen.this.specValues.get(key)).get()
-              .toString());
+      this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
 
@@ -451,9 +444,7 @@ public class EditConfigScreen extends Screen {
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 84, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
-      this.input.setValue(
-          ((SpectreConfigSpec.ConfigValue<?>) EditConfigScreen.this.specValues.get(key)).get()
-              .toString());
+      this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
 
