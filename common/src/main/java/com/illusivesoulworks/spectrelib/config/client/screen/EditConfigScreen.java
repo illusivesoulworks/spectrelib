@@ -207,6 +207,11 @@ public class EditConfigScreen extends Screen {
       return super.getRowWidth() + 100;
     }
 
+    @Override
+    protected int getScrollbarPosition() {
+      return super.getScrollbarPosition() + 50;
+    }
+
     public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
       super.render(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();

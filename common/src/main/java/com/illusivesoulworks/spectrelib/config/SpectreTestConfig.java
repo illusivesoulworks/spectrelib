@@ -38,6 +38,8 @@ public class SpectreTestConfig {
     public final SpectreConfigSpec.DoubleValue doubleValue;
     public final SpectreConfigSpec.LongValue longValue;
     public final SpectreConfigSpec.BooleanValue booleanValue;
+    public final SpectreConfigSpec.BooleanValue booleanValue1;
+    public final SpectreConfigSpec.BooleanValue booleanValue2;
     public final SpectreConfigSpec.EnumValue<ArmorMaterials> enumValue;
     public final SpectreConfigSpec.ConfigValue<String> stringValue;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> stringList;
@@ -50,6 +52,8 @@ public class SpectreTestConfig {
       this.doubleValue = builder.comment("Double Value Comment").translation("gui.doubleValue")
           .defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
       this.booleanValue = builder.comment("Boolean Value Comment").define("booleanValue", false);
+      this.booleanValue1 = builder.comment("Boolean Value Comment").define("booleanValue1", false);
+      this.booleanValue2 = builder.comment("Boolean Value Comment").define("booleanValue2", false);
       this.longValue =
           builder.comment("Long Value Comment").defineInRange("longValue", 0L, -10L, 10L);
 
