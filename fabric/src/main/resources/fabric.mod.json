@@ -18,6 +18,9 @@
       ],
       "preLaunch": [
         "com.illusivesoulworks.spectrelib.SpectrePreLaunchFabricMod"
+      ],
+      "modmenu": [
+        "com.illusivesoulworks.spectrelib.integration.ModMenuPlugin"
       ]
     },
     "mixins": [

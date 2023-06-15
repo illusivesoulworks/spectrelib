@@ -1,0 +1,25 @@
+{
+    "schemaVersion": 1,
+    "id": "spectretest",
+    "version": "1.0.0",
+    "name": "SpectreTest",
+    "description": "A test mod for SpectreLib.",
+    "authors": [
+      "Illusive Soulworks"
+    ],
+    "license": "LGPL-2.1-only",
+    "environment": "*",
+    "entrypoints": {
+      "spectrelib": [
+        "com.illusivesoulworks.spectrelib.SpectreTest"
+      ]
+    },
+    "mixins": [],
+    "depends": {
+      "fabricloader": ">=0.14",
+      "fabric": "*",
+      "minecraft": "*",
+      "java": ">=17"
+    }
+  }
+  
