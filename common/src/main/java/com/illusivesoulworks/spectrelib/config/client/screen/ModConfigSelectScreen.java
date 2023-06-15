@@ -110,6 +110,7 @@ public class ModConfigSelectScreen extends Screen {
               Consumer<Map<String, Object>> consumer = (values) -> {
                 commentedConfig.valueMap().putAll(values);
                 config.setConfigData(SpectreConfig.InstanceType.GLOBAL, commentedConfig, false);
+                config.fireLoad(true);
               };
               SpectreConfigSpec spec = config.getSpec();
               EditConfigScreen editConfigScreen =

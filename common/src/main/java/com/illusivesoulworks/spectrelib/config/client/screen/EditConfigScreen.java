@@ -2,7 +2,6 @@ package com.illusivesoulworks.spectrelib.config.client.screen;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.google.common.collect.ImmutableList;
-import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +89,7 @@ public class EditConfigScreen extends Screen {
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
     this.configList.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 24, 16777215);
+    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
     super.render(guiGraphics, x, y, delta);
   }
 
@@ -218,7 +217,19 @@ public class EditConfigScreen extends Screen {
     public ListConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                            String p_101103_, String key) {
       super(pTooltip, pLabel);
-      this.button = Button.builder(Component.empty(), (b) -> {
+      List<String> list = (List<String>) EditConfigScreen.this.values.get(key);
+      String result = String.join(",", list.stream().map(Object::toString).toList());
+      this.button = Button.builder(Component.literal(result), (b) -> {
+
+        if (EditConfigScreen.this.spec.get(key) instanceof SpectreConfigSpec.ValueSpec valueSpec) {
+          ListConfigScreen listConfigScreen =
+              new ListConfigScreen(EditConfigScreen.this.title, EditConfigScreen.this.subtitle,
+                  list, EditConfigScreen.this, valueSpec::test, (l) -> {
+                list.clear();
+                list.addAll(l);
+              });
+          Minecraft.getInstance().setScreen(listConfigScreen);
+        }
       }).bounds(10, 5, 88, 20).build();
       this.children.add(this.button);
     }
