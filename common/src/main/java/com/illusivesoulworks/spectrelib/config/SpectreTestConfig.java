@@ -45,10 +45,10 @@ public class SpectreTestConfig {
 
     public Test(SpectreConfigSpec.Builder builder) {
 
-      this.intValue = builder.comment("Integer Value Comment").translation("gui.intValue.name")
+      this.intValue = builder.comment("Integer Value Comment").translation("gui.intValue")
           .defineInRange("intVal", 0, -10, 10);
-      this.doubleValue =
-          builder.comment("Double Value Comment").defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
+      this.doubleValue = builder.comment("Double Value Comment").translation("gui.doubleValue")
+          .defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
       this.booleanValue = builder.comment("Boolean Value Comment").define("booleanValue", false);
       this.longValue =
           builder.comment("Long Value Comment").defineInRange("longValue", 0L, -10L, 10L);

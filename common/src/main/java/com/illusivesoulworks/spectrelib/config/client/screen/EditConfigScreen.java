@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
@@ -120,26 +121,54 @@ public class EditConfigScreen extends Screen {
           Component defaultComponent = Component.translatable("editGamerule.default",
               Component.literal(value.getDefault().toString())).withStyle(ChatFormatting.GRAY);
           String s1 = value.getLocalizationKey() + ".description";
+          String comment = value.getComment() != null ? value.getComment() : "";
+          String range = "";
+          String allowed = "";
+
+          if (!comment.isBlank()) {
+            int i = comment.indexOf("Range:");
+
+            if (i != -1) {
+              range = comment.substring(i);
+              comment = comment.substring(0, i);
+            }
+
+            i = comment.indexOf("Allowed Values:");
+
+            if (i != -1) {
+              allowed = comment.substring(i);
+              comment = comment.substring(0, i);
+            }
+          }
           List<FormattedCharSequence> list;
           String s2;
+          ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
+          builder.add(Component.literal(key).withStyle(ChatFormatting.YELLOW).getVisualOrderText());
 
           if (I18n.exists(s1)) {
-            ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
             Component component3 = Component.translatable(s1);
             EditConfigScreen.this.font.split(component3, 150).forEach(builder::add);
-            list = builder.add(defaultComponent.getVisualOrderText()).build();
             s2 = component3.getString() + "\n" + defaultComponent.getString();
           } else {
-            ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
             List<Component> commentComponents = new ArrayList<>();
 
-            for (String s : value.getComment().split("\n")) {
-              commentComponents.add(Component.literal(s).withStyle(ChatFormatting.YELLOW));
+            for (String s : comment.split("\n")) {
+              commentComponents.add(Component.literal(s));
             }
             builder.addAll(commentComponents.stream().map(Component::getVisualOrderText).toList());
-            list = builder.add(defaultComponent.getVisualOrderText()).build();
-            s2 = defaultComponent.getString();
+            s2 =
+                commentComponents.stream().map(Component::getString).collect(Collectors.joining()) +
+                    defaultComponent.getString();
           }
+
+          if (!range.isBlank()) {
+            builder.add(
+                Component.literal(range).withStyle(ChatFormatting.GREEN).getVisualOrderText());
+          } else if (!allowed.isBlank()) {
+            builder.add(
+                Component.literal(allowed).withStyle(ChatFormatting.GREEN).getVisualOrderText());
+          }
+          list = builder.add(defaultComponent.getVisualOrderText()).build();
           Object current = specValues.get(key);
 
           if (current instanceof SpectreConfigSpec.IntValue) {
