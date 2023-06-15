@@ -136,6 +136,16 @@ public class ListConfigScreen extends Screen {
         this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
       }
     }
+
+    @Override
+    public int getRowWidth() {
+      return super.getRowWidth() + 100;
+    }
+
+    @Override
+    protected int getScrollbarPosition() {
+      return super.getScrollbarPosition() + 50;
+    }
   }
 
   public final class Entry extends ContainerObjectSelectionList.Entry<ListConfigScreen.Entry> {
