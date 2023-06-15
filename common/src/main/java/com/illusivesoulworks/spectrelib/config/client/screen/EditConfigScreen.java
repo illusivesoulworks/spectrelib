@@ -202,6 +202,11 @@ public class EditConfigScreen extends Screen {
       });
     }
 
+    @Override
+    public int getRowWidth() {
+      return super.getRowWidth() + 100;
+    }
+
     public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
       super.render(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
@@ -259,7 +264,7 @@ public class EditConfigScreen extends Screen {
               });
           Minecraft.getInstance().setScreen(listConfigScreen);
         }
-      }).bounds(10, 5, 88, 20).build();
+      }).bounds(10, 5, 100, 20).build();
       this.children.add(this.button);
     }
 
@@ -267,7 +272,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.button.setX(x + offset - 89);
+      this.button.setX(x + offset - 101);
       this.button.setY(y);
       this.button.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -282,7 +287,7 @@ public class EditConfigScreen extends Screen {
       this.checkbox = CycleButton.onOffBuilder((Boolean) EditConfigScreen.this.values.get(key))
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
-          .create(10, 5, 44, 20, pLabel,
+          .create(10, 5, 100, 20, pLabel,
               (button, value) -> EditConfigScreen.this.values.put(key, value));
       this.children.add(this.checkbox);
     }
@@ -291,7 +296,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.checkbox.setX(x + offset - 45);
+      this.checkbox.setX(x + offset - 101);
       this.checkbox.setY(y);
       this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -304,7 +309,7 @@ public class EditConfigScreen extends Screen {
                               String p_101177_, String key) {
       super(pTooltip, pLabel);
       this.input =
-          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
+          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
@@ -337,7 +342,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 44);
+      this.input.setX(x + offset - 100);
       this.input.setY(y);
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -350,7 +355,7 @@ public class EditConfigScreen extends Screen {
                            String p_101177_, String key) {
       super(pTooltip, pLabel);
       this.input =
-          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
+          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
@@ -383,7 +388,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 44);
+      this.input.setX(x + offset - 100);
       this.input.setY(y);
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -396,7 +401,7 @@ public class EditConfigScreen extends Screen {
                              String p_101177_, String key) {
       super(pTooltip, pLabel);
       this.input =
-          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 42, 20,
+          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
@@ -429,7 +434,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 44);
+      this.input.setX(x + offset - 100);
       this.input.setY(y);
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -442,7 +447,7 @@ public class EditConfigScreen extends Screen {
                              String p_101177_, String key) {
       super(pTooltip, pLabel);
       this.input =
-          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 84, 20,
+          new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
               pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
@@ -467,7 +472,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 86);
+      this.input.setX(x + offset - 100);
       this.input.setY(y);
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
@@ -490,7 +495,7 @@ public class EditConfigScreen extends Screen {
           .withValues(clazz.getEnumConstants())
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
-          .create(10, 5, 88, 20, pLabel,
+          .create(10, 5, 100, 20, pLabel,
               (button, value) -> EditConfigScreen.this.values.put(key, value));
       this.children.add(this.checkbox);
     }
@@ -499,7 +504,7 @@ public class EditConfigScreen extends Screen {
                        int x, int offset, int p_283543_, int mouseX, int mouseY,
                        boolean p_283227_, float delta) {
       this.renderLabel(guiGraphics, y, x);
-      this.checkbox.setX(x + offset - 89);
+      this.checkbox.setX(x + offset - 101);
       this.checkbox.setY(y);
       this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
     }
