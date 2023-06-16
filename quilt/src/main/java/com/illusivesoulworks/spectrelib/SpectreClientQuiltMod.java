@@ -24,7 +24,7 @@ import com.illusivesoulworks.spectrelib.platform.QuiltConfigHelper;
 import java.io.File;
 import net.minecraft.client.main.GameConfig;
 import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.impl.entrypoint.EntrypointUtils;
+import org.quiltmc.loader.api.entrypoint.EntrypointUtil;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
@@ -34,7 +34,7 @@ public class SpectreClientQuiltMod implements ClientModInitializer {
   public static void prepareConfigs(GameConfig gameConfig) {
     File file = gameConfig.location.gameDirectory;
     QuiltConfigHelper.gameDir = file.toPath();
-    EntrypointUtils.invoke("spectrelib", SpectreLibInitializer.class,
+    EntrypointUtil.invoke("spectrelib", SpectreLibInitializer.class,
         SpectreLibInitializer::onInitializeConfig);
     SpectreConfigEvents.onLoadGlobal();
   }
