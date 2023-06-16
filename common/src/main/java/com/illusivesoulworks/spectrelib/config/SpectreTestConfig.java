@@ -40,6 +40,10 @@ public class SpectreTestConfig {
     public final SpectreConfigSpec.BooleanValue booleanValue;
     public final SpectreConfigSpec.BooleanValue booleanValue1;
     public final SpectreConfigSpec.BooleanValue booleanValue2;
+    public final SpectreConfigSpec.EnumValue<ArmorMaterials> enumValue1;
+    public final SpectreConfigSpec.ConfigValue<String> stringValue1;
+    public final SpectreConfigSpec.ConfigValue<List<? extends String>> stringList1;
+    public final SpectreConfigSpec.ConfigValue<List<? extends String>> validatedList1;
     public final SpectreConfigSpec.EnumValue<ArmorMaterials> enumValue;
     public final SpectreConfigSpec.ConfigValue<String> stringValue;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> stringList;
@@ -56,6 +60,16 @@ public class SpectreTestConfig {
       this.booleanValue2 = builder.comment("Boolean Value Comment").define("booleanValue2", false);
       this.longValue =
           builder.comment("Long Value Comment").defineInRange("longValue", 0L, -10L, 10L);
+      this.stringValue1 =
+          builder.comment("String Value Comment").define("stringValue1", "String Value");
+      this.enumValue1 =
+          builder.comment("Enum Value Comment").defineEnum("enumValue1", ArmorMaterials.CHAIN);
+      this.stringList1 = builder.comment("String List Comment")
+          .defineList("stringList1", Arrays.asList("first", "second", "third"),
+              s -> s instanceof String);
+      this.validatedList1 = builder.comment("Validated List Comment").defineList("listOfItems1",
+          Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
+          s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1));
 
       builder.push("nested");
       this.stringValue =
