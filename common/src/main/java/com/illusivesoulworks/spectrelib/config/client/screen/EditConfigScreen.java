@@ -507,7 +507,7 @@ public class EditConfigScreen extends Screen {
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
           .create(10, 5, 100, 20, pLabel,
-              (button, value) -> EditConfigScreen.this.values.put(key, value));
+              (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
       this.children.add(this.checkbox);
     }
 
