@@ -1,6 +1,7 @@
 package com.illusivesoulworks.spectrelib.config.client.screen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,6 +116,10 @@ public class ListConfigScreen extends Screen {
       this.clearEntries();
       ListConfigScreen.this.values.add(index, "");
 
+      if (!ListConfigScreen.this.validator.test(Collections.singletonList(""))) {
+        ListConfigScreen.this.markInvalid(index);
+      }
+
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
       }
@@ -163,10 +168,8 @@ public class ListConfigScreen extends Screen {
                 width - 45, 20, Component.literal(currentValue));
         this.input.setValue(currentValue);
         this.input.setResponder((newValue) -> {
-          List<String> test = new ArrayList<>(ListConfigScreen.this.values);
-          test.set(index, newValue);
 
-          if (ListConfigScreen.this.validator.test(test)) {
+          if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
             this.input.setTextColor(14737632);
             ListConfigScreen.this.values.set(index, newValue);
             ListConfigScreen.this.clearInvalid(index);
@@ -177,6 +180,7 @@ public class ListConfigScreen extends Screen {
         });
         this.removeButton = Button.builder(Component.literal("-"), (b) -> {
           ListConfigScreen.this.listConfig.removeEntry(index);
+          ListConfigScreen.this.clearInvalid(index);
         }).bounds(10, 5, 20, 20).build();
       }
       this.addButton = Button.builder(Component.literal("+"), (b) -> {
