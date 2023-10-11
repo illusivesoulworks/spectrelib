@@ -43,10 +43,14 @@ public class SpectreQuiltMod implements ModInitializer {
       ServerPlayer serverPlayer = handler.getPlayer();
       List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
 
-      for (FriendlyByteBuf configDatum : configData) {
-        ServerPlayNetworking.send(serverPlayer, CONFIG_SYNC, configDatum);
+      if (!configData.isEmpty()) {
+
+        for (FriendlyByteBuf configDatum : configData) {
+          ServerPlayNetworking.send(serverPlayer, CONFIG_SYNC, configDatum);
+        }
+        ServerPlayNetworking.send(serverPlayer, CONFIG_SYNC,
+            new FriendlyByteBuf(Unpooled.buffer()));
       }
-      ServerPlayNetworking.send(serverPlayer, CONFIG_SYNC, new FriendlyByteBuf(Unpooled.buffer()));
     });
   }
 }

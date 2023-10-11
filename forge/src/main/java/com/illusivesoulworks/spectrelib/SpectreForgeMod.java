@@ -77,12 +77,15 @@ public class SpectreForgeMod {
     if (player instanceof ServerPlayer serverPlayer) {
       List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
 
-      for (FriendlyByteBuf configDatum : configData) {
+      if (!configData.isEmpty()) {
+
+        for (FriendlyByteBuf configDatum : configData) {
+          SpectreForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+              new ConfigSyncPacket(configDatum));
+        }
         SpectreForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-            new ConfigSyncPacket(configDatum));
+            new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())));
       }
-      SpectreForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-          new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())));
     }
   }
 }

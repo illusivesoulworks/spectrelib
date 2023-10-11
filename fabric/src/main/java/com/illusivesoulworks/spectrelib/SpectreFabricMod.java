@@ -42,12 +42,15 @@ public class SpectreFabricMod implements ModInitializer {
       ServerPlayer serverPlayer = handler.getPlayer();
       List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
 
-      for (FriendlyByteBuf configDatum : configData) {
+      if (!configData.isEmpty()) {
+
+        for (FriendlyByteBuf configDatum : configData) {
+          ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
+              configDatum);
+        }
         ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
-            configDatum);
+            new FriendlyByteBuf(Unpooled.buffer()));
       }
-      ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
-          new FriendlyByteBuf(Unpooled.buffer()));
     });
   }
 }
