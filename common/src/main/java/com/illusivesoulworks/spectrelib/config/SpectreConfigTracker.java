@@ -39,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.server.MinecraftServer;
@@ -98,8 +99,9 @@ public class SpectreConfigTracker {
 
   void loadServerConfigs(MinecraftServer server) {
     Path configDir = Services.CONFIG.getServerConfigPath(server);
-    SpectreConfig.InstanceType type = SpectreConfig.InstanceType.SERVER;
-    SpectreConstants.LOG.debug(CONFIG, "Loading {} configs from {} on server", type.id(),
+    AtomicReference<SpectreConfig.InstanceType> type =
+        new AtomicReference<>(SpectreConfig.InstanceType.SERVER);
+    SpectreConstants.LOG.debug(CONFIG, "Loading {} configs from {} on server", type.get().id(),
         configDir);
     this.files.values().forEach(config -> {
       Path dir = null;
@@ -113,6 +115,7 @@ public class SpectreConfigTracker {
         Path globalPath = globalDir.resolve(name);
 
         if (Files.exists(globalPath)) {
+          type.set(SpectreConfig.InstanceType.GLOBAL);
           dir = globalDir;
         }
       }
@@ -121,9 +124,9 @@ public class SpectreConfigTracker {
         SpectreConstants.LOG.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
             config.getType(), config.getFileName(), dir, config.getModId());
         final CommentedFileConfig configData = read(dir).apply(config);
-        config.setConfigData(type, configData, false);
+        config.setConfigData(type.get(), configData, false);
         config.fireLoad(false);
-        config.save(type);
+        config.save(type.get());
       }
     });
   }
