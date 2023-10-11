@@ -25,7 +25,6 @@ import io.netty.buffer.Unpooled;
 import java.util.List;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -72,9 +71,7 @@ public class SpectreForgeMod {
   }
 
   private void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent evt) {
-    Player player = evt.getEntity();
-
-    if (player instanceof ServerPlayer serverPlayer) {
+    if (evt.getEntity() instanceof ServerPlayer serverPlayer) {
       List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
 
       if (!configData.isEmpty()) {

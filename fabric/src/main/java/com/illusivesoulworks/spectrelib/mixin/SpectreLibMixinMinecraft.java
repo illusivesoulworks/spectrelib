@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class SpectreLibMixinMinecraft {
 
-  @Inject(at = @At(value = "INVOKE", target = "net/minecraft/network/chat/contents/KeybindResolver.setKeyResolver(Ljava/util/function/Function;)V"), method = "<init>")
+  @Inject(at = @At(value = "INVOKE", target = "net/minecraft/network/chat/KeybindComponent.setKeyResolver(Ljava/util/function/Function;)V"), method = "<init>")
   private void spectrelib$init(GameConfig config, CallbackInfo ci) {
     SpectreClientFabricMod.prepareConfigs(config);
   }

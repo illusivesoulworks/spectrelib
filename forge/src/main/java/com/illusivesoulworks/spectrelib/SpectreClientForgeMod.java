@@ -28,7 +28,7 @@ public class SpectreClientForgeMod {
     MinecraftForge.EVENT_BUS.addListener(SpectreClientForgeMod::onPlayerLoggedOut);
   }
 
-  private static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut evt) {
+  private static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggedOutEvent evt) {
 
     if (!Minecraft.getInstance().isLocalServer()) {
       SpectreConfigEvents.onUnloadServer();
