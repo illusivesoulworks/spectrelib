@@ -88,10 +88,10 @@ public class EditConfigScreen extends Screen {
   }
 
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+    super.render(guiGraphics, x, y, delta);
     this.configList.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
     guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
-    super.render(guiGraphics, x, y, delta);
   }
 
   private void updateDoneButton() {

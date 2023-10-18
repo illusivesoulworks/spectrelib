@@ -19,20 +19,25 @@ package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.SpectreConstants;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.SimpleChannel;
 
 public class SpectreForgePacketHandler {
 
-  private static final String PROTOCOL_VERSION = "1";
+  private static final int PROTOCOL_VERSION = 1;
 
-  public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-      new ResourceLocation(SpectreConstants.MOD_ID, "main"), () -> PROTOCOL_VERSION,
-      (version) -> true, (version) -> true
-  );
+  public static SimpleChannel INSTANCE;
 
   public static void setup() {
-    INSTANCE.registerMessage(0, ConfigSyncPacket.class, ConfigSyncPacket::encoder,
-        ConfigSyncPacket::decoder, ConfigSyncPacket::messageConsumer);
+    INSTANCE = ChannelBuilder.named(new ResourceLocation(SpectreConstants.MOD_ID, "main"))
+        .networkProtocolVersion(PROTOCOL_VERSION)
+        .clientAcceptedVersions((status, version) -> true)
+        .serverAcceptedVersions((status, version) -> true).simpleChannel();
+
+    INSTANCE.messageBuilder(ConfigSyncPacket.class)
+        .encoder(ConfigSyncPacket::encoder)
+        .decoder(ConfigSyncPacket::decoder)
+        .consumerNetworkThread(ConfigSyncPacket::messageConsumer)
+        .add();
   }
 }

@@ -80,11 +80,12 @@ public class SpectreForgeMod {
       if (!configData.isEmpty()) {
 
         for (FriendlyByteBuf configDatum : configData) {
-          SpectreForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-              new ConfigSyncPacket(configDatum));
+          SpectreForgePacketHandler.INSTANCE.send(new ConfigSyncPacket(configDatum),
+              PacketDistributor.PLAYER.with(serverPlayer));
         }
-        SpectreForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-            new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())));
+        SpectreForgePacketHandler.INSTANCE.send(
+            new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())),
+            PacketDistributor.PLAYER.with(serverPlayer));
       }
     }
   }

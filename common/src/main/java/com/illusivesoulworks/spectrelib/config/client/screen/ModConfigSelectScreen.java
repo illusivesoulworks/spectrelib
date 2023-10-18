@@ -47,10 +47,9 @@ public class ModConfigSelectScreen extends Screen {
 
   @Override
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
-    this.renderBackground(guiGraphics);
+    super.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
     this.configSelectionList.render(guiGraphics, x, y, delta);
-    super.render(guiGraphics, x, y, delta);
   }
 
   public void onClose() {

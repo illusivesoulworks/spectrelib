@@ -18,11 +18,10 @@
 package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
-import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
 
 public record ConfigSyncPacket(FriendlyByteBuf data) {
 
@@ -34,10 +33,10 @@ public record ConfigSyncPacket(FriendlyByteBuf data) {
     return new ConfigSyncPacket(buffer);
   }
 
-  public static void messageConsumer(ConfigSyncPacket packet, Supplier<NetworkEvent.Context> ctx) {
+  public static void messageConsumer(ConfigSyncPacket packet, CustomPayloadEvent.Context ctx) {
     packet.data.retain();
-    ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+    ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
         () -> () -> SpectreConfigNetwork.handleConfigSync(packet.data)));
-    ctx.get().setPacketHandled(true);
+    ctx.setPacketHandled(true);
   }
 }
