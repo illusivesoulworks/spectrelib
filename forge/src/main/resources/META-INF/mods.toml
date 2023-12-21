@@ -1,6 +1,9 @@
 modLoader="javafml"
 loaderVersion="[41,)"
 license="${license}"
+issueTrackerURL="${issues}"
+logoFile="${mod_id}_icon.png"
+logoBlur=false
 [[mods]]
 modId="${mod_id}"
 version="${version}"
@@ -9,6 +12,7 @@ authors="${mod_author}"
 description='''
 ${mod_description}
 '''
+displayURL="${source}"
 [[dependencies.spectrelib]]
     modId="forge"
     mandatory=true
