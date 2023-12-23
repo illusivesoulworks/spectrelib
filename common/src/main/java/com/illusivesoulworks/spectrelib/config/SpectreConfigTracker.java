@@ -147,10 +147,14 @@ public class SpectreConfigTracker {
     } catch (ParsingException e) {
       try {
         Path path = configData.getNioPath();
-        backupConfig(path);
+        SpectreConstants.LOG.warn(CONFIG,
+            "Configuration file {} could not be parsed. Creating backup file and correcting", path);
+
+        if (Files.exists(path)) {
+          createBackup(path);
+        }
         Files.delete(path);
         configData.load();
-        SpectreConstants.LOG.warn("Configuration file {} could not be parsed. Correcting", path);
         return;
       } catch (Throwable t) {
         e.addSuppressed(t);
@@ -159,19 +163,19 @@ public class SpectreConfigTracker {
     }
   }
 
-  private static void backupConfig(Path path) {
+  private static void createBackup(Path commentedFileConfig) {
+    Path path = commentedFileConfig.getParent();
+    String name = commentedFileConfig.getFileName().toString();
+    String fileName = FilenameUtils.removeExtension(name);
+    String extension = FilenameUtils.getExtension(name) + ".bak";
+    Path backup = path.resolve(fileName + "." + extension);
 
-    if (Files.exists(path)) {
-      Path dir = path.getParent();
-      String fileName = path.getFileName().toString();
-      String extension = FilenameUtils.getExtension(fileName) + ".bak";
-      fileName = FilenameUtils.removeExtension(fileName);
-
-      try {
-        Files.copy(path, dir.resolve(fileName + "." + extension));
-      } catch (IOException e) {
-        SpectreConstants.LOG.warn("Failed to backup configuration file {}", path, e);
-      }
+    try {
+      Files.deleteIfExists(backup);
+      Files.copy(commentedFileConfig, backup);
+    } catch (IOException exception) {
+      SpectreConstants.LOG.warn(CONFIG, "Failed to create backup file for {}", commentedFileConfig,
+          exception);
     }
   }
 
