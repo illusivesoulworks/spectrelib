@@ -80,7 +80,8 @@ tasks.withType(JavaCompile) {
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
 def replaceProperties = [
         version: version, forge_mc_version_range: forge_mc_version_range, forge_version_range: forge_version_range,
-        license: license, mod_id: mod_id, mod_author: mod_author, mod_description: mod_description, mod_name: mod_name
+        license: license, mod_id: mod_id, mod_author: mod_author, mod_description: mod_description, mod_name: mod_name,
+        source: project.source, issues: issues
 ]
 processResources {
     from project(":common").sourceSets.main.resources
