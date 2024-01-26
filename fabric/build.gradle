@@ -1,11 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
+    id 'java'
     id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'net.darkhax.curseforgegradle' version '1.+'
 }
-
-archivesBaseName = "${mod_id}-fabric"
-
+base {
+    archivesName = "${mod_id}-fabric"
+}
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings(loom.layered {
@@ -15,7 +18,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":common")
+    compileOnly project(":common")
+    testImplementation project(':common')
 
     modCompileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
     modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
@@ -27,6 +31,12 @@ dependencies {
 }
 
 loom {
+    if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
+        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
     runs {
         client {
             client()
@@ -44,56 +54,30 @@ loom {
     }
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs += "licenses"
-        }
-    }
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
+}
+tasks.withType(Javadoc).configureEach {
+    source(project(":common").sourceSets.main.allJava)
+}
+tasks.named("sourcesJar", Jar) {
+    from(project(":common").sourceSets.main.allSource)
 }
 
 processResources {
     from project(":common").sourceSets.main.resources
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand 'version': project.version, 'fabric_mc_version_range': project.fabric_mc_version_range, 'license': project.license,
-                'mod_id': project.mod_id, 'mod_author': project.mod_author, 'mod_description': project.mod_description,
-                'mod_name': project.mod_name, 'issues': project.issues, 'source': project.source
-    }
-
-    filesMatching("pack.mcmeta") {
-        expand 'mod_name': project.mod_name
-    }
-}
-
-tasks.withType(JavaCompile) {
-    source(project(":common").sourceSets.main.allSource)
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
+            artifactId base.archivesName.get()
             from components.java
         }
     }
-
     repositories {
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
-            }
+        maven {
+            url "file://" + System.getenv("local_maven")
         }
     }
 }

@@ -3,17 +3,16 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "${mod_name}",
-  "description": "${mod_description}",
-  "icon": "${mod_id}_icon.png",
+  "description": "${description}",
   "authors": [
     "${mod_author}"
   ],
   "contact": {
-    "homepage": "${source}",
-    "issues": "${issues}",
-    "sources": "${source}"
+    "sources": "${sources_url}",
+    "issues": "${issues_url}"
   },
   "license": "${license}",
+  "icon": "${mod_id}_icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -29,19 +28,17 @@
       "com.illusivesoulworks.spectrelib.integration.ModMenuPlugin"
     ]
   },
-  "custom": {
-    "modmenu": {
-      "badges": ["library"]
-    }
-  },
   "mixins": [
     "spectrelib.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14",
-    "fabric": "*",
-    "minecraft": "${fabric_mc_version_range}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version_range_alt}",
     "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
   }
 }
   

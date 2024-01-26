@@ -112,7 +112,7 @@ public class EditConfigScreen extends Screen {
 
     public ConfigList(final Map<String, Object> spec, final Map<String, Object> specValues) {
       super(Objects.requireNonNull(EditConfigScreen.this.minecraft), EditConfigScreen.this.width,
-          EditConfigScreen.this.height, 43, EditConfigScreen.this.height - 32, 24);
+          EditConfigScreen.this.height - 75, 43, 24);
       spec.forEach((key, obj) -> {
 
         if (obj instanceof SpectreConfigSpec.ValueSpec value) {
@@ -217,8 +217,8 @@ public class EditConfigScreen extends Screen {
       return super.getScrollbarPosition() + 50;
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
-      super.render(guiGraphics, x, y, delta);
+    public void renderWidget(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+      super.renderWidget(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
 
       if (configEntry != null && configEntry.tooltip != null) {

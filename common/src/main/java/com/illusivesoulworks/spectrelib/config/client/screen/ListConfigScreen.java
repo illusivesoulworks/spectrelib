@@ -101,7 +101,7 @@ public class ListConfigScreen extends Screen {
 
     public ListConfig() {
       super(Objects.requireNonNull(ListConfigScreen.this.minecraft), ListConfigScreen.this.width,
-          ListConfigScreen.this.height, 43, ListConfigScreen.this.height - 32, 24);
+          ListConfigScreen.this.height - 75, 43, 24);
 
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));

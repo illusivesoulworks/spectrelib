@@ -61,8 +61,7 @@ public class ModConfigSelectScreen extends Screen {
 
   class ModConfigSelectionList extends ObjectSelectionList<ModConfigSelectionList.Entry> {
     public ModConfigSelectionList(Minecraft mc) {
-      super(mc, ModConfigSelectScreen.this.width, ModConfigSelectScreen.this.height, 43,
-          ModConfigSelectScreen.this.height - 32, 24);
+      super(mc, ModConfigSelectScreen.this.width, ModConfigSelectScreen.this.height - 75, 43, 24);
 
       ModConfigSelectScreen.this.configs.values().forEach((configs) -> {
 
