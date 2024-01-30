@@ -68,13 +68,27 @@ tasks.withType(ProcessResources).matching(notNeoTask).configureEach {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            artifact jar
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
     repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
+        if (project.hasProperty('urlMaven')) {
+
+            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
+
+                maven {
+                    url urlMaven
+                    credentials {
+                        username userMaven
+                        password passMaven
+                    }
+                }
+            }
         }
     }
 }
