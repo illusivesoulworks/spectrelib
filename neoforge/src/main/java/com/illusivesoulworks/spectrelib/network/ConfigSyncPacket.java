@@ -18,18 +18,22 @@
 package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.SpectreConstants;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record ConfigSyncPacket(FriendlyByteBuf data) implements CustomPacketPayload {
+public class ConfigSyncPacket extends SpectreConfigPayload implements CustomPacketPayload {
 
   public static final ResourceLocation ID = new ResourceLocation(SpectreConstants.MOD_ID, "sync");
 
-  @Override
-  public void write(@Nonnull FriendlyByteBuf buf) {
-    buf.writeBytes(this.data());
+  public ConfigSyncPacket(byte[] contents, String fileName) {
+    super(contents, fileName);
+  }
+
+  public ConfigSyncPacket(FriendlyByteBuf buf) {
+    super(buf);
   }
 
   @Nonnull

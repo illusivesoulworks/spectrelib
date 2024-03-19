@@ -18,15 +18,24 @@
 package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-public record ConfigSyncPacket(FriendlyByteBuf data) {
+public class ConfigSyncPacket extends SpectreConfigPayload {
+
+  public ConfigSyncPacket(byte[] contents, String fileName) {
+    super(contents, fileName);
+  }
+
+  public ConfigSyncPacket(FriendlyByteBuf buf) {
+    super(buf);
+  }
 
   public void encoder(FriendlyByteBuf buffer) {
-    buffer.writeBytes(data);
+    this.write(buffer);
   }
 
   public static ConfigSyncPacket decoder(FriendlyByteBuf buffer) {
@@ -34,9 +43,8 @@ public record ConfigSyncPacket(FriendlyByteBuf data) {
   }
 
   public static void messageConsumer(ConfigSyncPacket packet, CustomPayloadEvent.Context ctx) {
-    packet.data.retain();
     ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> SpectreConfigNetwork.handleConfigSync(packet.data)));
+        () -> () -> SpectreConfigNetwork.acceptSyncedConfigs(packet.contents, packet.fileName)));
     ctx.setPacketHandled(true);
   }
 }

@@ -39,8 +39,9 @@ public class SpectreClientFabricMod implements ClientModInitializer {
     });
     ClientPlayNetworking.registerGlobalReceiver(SpectreFabricMod.CONFIG_SYNC,
         (client, handler, buf, responseSender) -> {
-          buf.retain();
-          client.execute(() -> SpectreConfigNetwork.handleConfigSync(buf));
+          byte[] contents = buf.readByteArray();
+          String fileName = buf.readUtf();
+          client.execute(() -> SpectreConfigNetwork.acceptSyncedConfigs(contents, fileName));
         });
   }
 

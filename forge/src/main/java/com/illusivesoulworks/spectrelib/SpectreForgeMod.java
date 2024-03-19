@@ -19,11 +19,10 @@ package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import com.illusivesoulworks.spectrelib.network.ConfigSyncPacket;
 import com.illusivesoulworks.spectrelib.network.SpectreForgePacketHandler;
-import io.netty.buffer.Unpooled;
 import java.util.List;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
@@ -75,17 +74,15 @@ public class SpectreForgeMod {
     Player player = evt.getEntity();
 
     if (player instanceof ServerPlayer serverPlayer) {
-      List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
+      List<SpectreConfigPayload> configData = SpectreConfigNetwork.getConfigSync();
 
       if (!configData.isEmpty()) {
 
-        for (FriendlyByteBuf configDatum : configData) {
-          SpectreForgePacketHandler.INSTANCE.send(new ConfigSyncPacket(configDatum),
+        for (SpectreConfigPayload configDatum : configData) {
+          SpectreForgePacketHandler.INSTANCE.send(
+              new ConfigSyncPacket(configDatum.contents, configDatum.fileName),
               PacketDistributor.PLAYER.with(serverPlayer));
         }
-        SpectreForgePacketHandler.INSTANCE.send(
-            new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())),
-            PacketDistributor.PLAYER.with(serverPlayer));
       }
     }
   }

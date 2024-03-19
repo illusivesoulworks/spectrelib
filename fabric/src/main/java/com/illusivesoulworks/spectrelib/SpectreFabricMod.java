@@ -19,10 +19,11 @@ package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
-import io.netty.buffer.Unpooled;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,16 +41,15 @@ public class SpectreFabricMod implements ModInitializer {
     ServerLifecycleEvents.SERVER_STOPPED.register(server -> SpectreConfigEvents.onUnloadServer());
     ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
       ServerPlayer serverPlayer = handler.getPlayer();
-      List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
+      List<SpectreConfigPayload> configData = SpectreConfigNetwork.getConfigSync();
 
       if (!configData.isEmpty()) {
 
-        for (FriendlyByteBuf configDatum : configData) {
-          ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
-              configDatum);
+        for (SpectreConfigPayload configDatum : configData) {
+          FriendlyByteBuf buf = PacketByteBufs.create();
+          configDatum.write(buf);
+          ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC, buf);
         }
-        ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC,
-            new FriendlyByteBuf(Unpooled.buffer()));
       }
     });
   }

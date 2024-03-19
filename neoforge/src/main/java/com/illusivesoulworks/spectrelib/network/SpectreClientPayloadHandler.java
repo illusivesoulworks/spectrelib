@@ -19,7 +19,6 @@ package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 public class SpectreClientPayloadHandler {
@@ -31,8 +30,8 @@ public class SpectreClientPayloadHandler {
   }
 
   public void handleData(final ConfigSyncPacket packet, final PlayPayloadContext ctx) {
-    packet.data().retain();
-    ctx.workHandler().submitAsync(() -> SpectreConfigNetwork.handleConfigSync(packet.data()))
+    ctx.workHandler().submitAsync(
+            () -> SpectreConfigNetwork.acceptSyncedConfigs(packet.contents, packet.fileName))
         .exceptionally(e -> {
           ctx.packetHandler()
               .disconnect(Component.translatable("spectrelib.networking.failed", e.getMessage()));

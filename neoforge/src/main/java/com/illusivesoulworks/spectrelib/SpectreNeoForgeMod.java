@@ -19,11 +19,10 @@ package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import com.illusivesoulworks.spectrelib.network.ConfigSyncPacket;
 import com.illusivesoulworks.spectrelib.network.SpectreClientPayloadHandler;
-import io.netty.buffer.Unpooled;
 import java.util.List;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
@@ -74,15 +73,14 @@ public class SpectreNeoForgeMod {
     Player player = evt.getEntity();
 
     if (player instanceof ServerPlayer serverPlayer) {
-      List<FriendlyByteBuf> configData = SpectreConfigNetwork.getConfigSync();
+      List<SpectreConfigPayload> configData = SpectreConfigNetwork.getConfigSync();
 
       if (!configData.isEmpty()) {
 
-        for (FriendlyByteBuf configDatum : configData) {
-          PacketDistributor.PLAYER.with(serverPlayer).send(new ConfigSyncPacket(configDatum));
+        for (SpectreConfigPayload configDatum : configData) {
+          PacketDistributor.PLAYER.with(serverPlayer)
+              .send(new ConfigSyncPacket(configDatum.contents, configDatum.fileName));
         }
-        PacketDistributor.PLAYER.with(serverPlayer)
-            .send(new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())));
       }
     }
   }
