@@ -20,7 +20,6 @@ package com.illusivesoulworks.spectrelib.network;
 import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
@@ -41,10 +40,10 @@ public class SpectreForgePacketHandler {
         .serverAcceptedVersions((status, version) -> true).simpleChannel();
 
     INSTANCE.messageBuilder(SpectreConfigPayload.class)
-        .encoder((payload, friendlyByteBuf) -> SpectreConfigPayload.STREAM_CODEC.encode(
-            (RegistryFriendlyByteBuf) friendlyByteBuf, payload))
-        .decoder(friendlyByteBuf -> SpectreConfigPayload.STREAM_CODEC.decode(
-            (RegistryFriendlyByteBuf) friendlyByteBuf))
+        .encoder(
+            (payload, friendlyByteBuf) -> SpectreConfigPayload.STREAM_CODEC.encode(friendlyByteBuf,
+                payload))
+        .decoder(SpectreConfigPayload.STREAM_CODEC::decode)
         .consumerNetworkThread(SpectreForgePacketHandler::messageConsumer)
         .add();
   }
