@@ -17,7 +17,7 @@
 
 package com.illusivesoulworks.spectrelib.config;
 
-public interface SpectreLibInitializer {
+public interface SpectreConfigInitializer {
 
   void onInitializeConfig();
 }

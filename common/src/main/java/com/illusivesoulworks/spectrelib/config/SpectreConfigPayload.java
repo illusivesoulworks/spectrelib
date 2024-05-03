@@ -1,8 +1,26 @@
 package com.illusivesoulworks.spectrelib.config;
 
+import com.illusivesoulworks.spectrelib.SpectreConstants;
+import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-public class SpectreConfigPayload {
+public class SpectreConfigPayload implements CustomPacketPayload {
+
+  public static final Type<SpectreConfigPayload> TYPE =
+      new Type<>(new ResourceLocation(SpectreConstants.MOD_ID, "sync"));
+  public static final StreamCodec<RegistryFriendlyByteBuf, SpectreConfigPayload>
+      STREAM_CODEC =
+      StreamCodec.composite(
+          ByteBufCodecs.BYTE_ARRAY,
+          packet -> packet.contents,
+          ByteBufCodecs.STRING_UTF8,
+          packet -> packet.fileName,
+          SpectreConfigPayload::new);
 
   public final String fileName;
   public final byte[] contents;
@@ -16,8 +34,9 @@ public class SpectreConfigPayload {
     this(buf.readByteArray(), buf.readUtf());
   }
 
-  public void write(FriendlyByteBuf buffer) {
-    buffer.writeByteArray(this.contents);
-    buffer.writeUtf(this.fileName);
+  @Nonnull
+  @Override
+  public Type<? extends CustomPacketPayload> type() {
+    return TYPE;
   }
 }

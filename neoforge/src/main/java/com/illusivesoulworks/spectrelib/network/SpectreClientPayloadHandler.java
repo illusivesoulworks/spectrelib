@@ -18,8 +18,9 @@
 package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SpectreClientPayloadHandler {
 
@@ -29,12 +30,11 @@ public class SpectreClientPayloadHandler {
     return INSTANCE;
   }
 
-  public void handleData(final ConfigSyncPacket packet, final PlayPayloadContext ctx) {
-    ctx.workHandler().submitAsync(
+  public void handleData(final SpectreConfigPayload packet, final IPayloadContext ctx) {
+    ctx.enqueueWork(
             () -> SpectreConfigNetwork.acceptSyncedConfigs(packet.contents, packet.fileName))
         .exceptionally(e -> {
-          ctx.packetHandler()
-              .disconnect(Component.translatable("spectrelib.networking.failed", e.getMessage()));
+          ctx.disconnect(Component.translatable("spectrelib.networking.failed", e.getMessage()));
           return null;
         });
   }

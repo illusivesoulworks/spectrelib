@@ -18,13 +18,15 @@
 package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
-import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import com.illusivesoulworks.spectrelib.platform.FabricConfigHelper;
 import java.io.File;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.main.GameConfig;
 
 public class SpectreClientFabricMod implements ClientModInitializer {
@@ -37,19 +39,20 @@ public class SpectreClientFabricMod implements ClientModInitializer {
         SpectreConfigEvents.onUnloadServer();
       }
     });
-    ClientPlayNetworking.registerGlobalReceiver(SpectreFabricMod.CONFIG_SYNC,
-        (client, handler, buf, responseSender) -> {
-          byte[] contents = buf.readByteArray();
-          String fileName = buf.readUtf();
-          client.execute(() -> SpectreConfigNetwork.acceptSyncedConfigs(contents, fileName));
+    ClientPlayNetworking.registerGlobalReceiver(SpectreConfigPayload.TYPE,
+        (payload, context) -> {
+          byte[] contents = payload.contents;
+          String fileName = payload.fileName;
+          context.client()
+              .execute(() -> SpectreConfigNetwork.acceptSyncedConfigs(contents, fileName));
         });
   }
 
   public static void prepareConfigs(GameConfig gameConfig) {
     File file = gameConfig.location.gameDirectory;
     FabricConfigHelper.gameDir = file.toPath();
-    EntrypointUtils.invokeEntrypoints("spectrelib", SpectreLibInitializer.class,
-        SpectreLibInitializer::onInitializeConfig);
+    EntrypointUtils.invokeEntrypoints("spectrelib-config", SpectreConfigInitializer.class,
+        SpectreConfigInitializer::onInitializeConfig);
     SpectreConfigEvents.onLoadGlobal();
   }
 }

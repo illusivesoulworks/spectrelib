@@ -2,10 +2,10 @@ package com.illusivesoulworks.spectrelib;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfig;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigLoader;
-import com.illusivesoulworks.spectrelib.config.SpectreLibInitializer;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
 import com.illusivesoulworks.spectrelib.config.SpectreTestConfig;
 
-public class SpectreTest implements SpectreLibInitializer {
+public class SpectreTest implements SpectreConfigInitializer {
 
   @Override
   public void onInitializeConfig() {

@@ -3,6 +3,7 @@ package com.illusivesoulworks.spectrelib.config;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -40,11 +41,11 @@ public class SpectreTestConfig {
     public final SpectreConfigSpec.BooleanValue booleanValue;
     public final SpectreConfigSpec.BooleanValue booleanValue1;
     public final SpectreConfigSpec.BooleanValue booleanValue2;
-    public final SpectreConfigSpec.EnumValue<ArmorMaterials> enumValue1;
+    public final SpectreConfigSpec.EnumValue<ArmorItem.Type> enumValue1;
     public final SpectreConfigSpec.ConfigValue<String> stringValue1;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> stringList1;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> validatedList1;
-    public final SpectreConfigSpec.EnumValue<ArmorMaterials> enumValue;
+    public final SpectreConfigSpec.EnumValue<ArmorItem.Type> enumValue;
     public final SpectreConfigSpec.ConfigValue<String> stringValue;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> stringList;
     public final SpectreConfigSpec.ConfigValue<List<? extends String>> validatedList;
@@ -63,7 +64,7 @@ public class SpectreTestConfig {
       this.stringValue1 =
           builder.comment("String Value Comment").define("stringValue1", "String Value");
       this.enumValue1 =
-          builder.comment("Enum Value Comment").defineEnum("enumValue1", ArmorMaterials.CHAIN);
+          builder.comment("Enum Value Comment").defineEnum("enumValue1", ArmorItem.Type.BODY);
       this.stringList1 = builder.comment("String List Comment")
           .defineList("stringList1", Arrays.asList("first", "second", "third"),
               s -> s instanceof String);
@@ -75,7 +76,7 @@ public class SpectreTestConfig {
       this.stringValue =
           builder.comment("String Value Comment").define("stringValue", "String Value");
       this.enumValue =
-          builder.comment("Enum Value Comment").defineEnum("enumValue", ArmorMaterials.CHAIN);
+          builder.comment("Enum Value Comment").defineEnum("enumValue", ArmorItem.Type.BODY);
       builder.pop();
 
       builder.comment("Nested Comment").push("second nested");

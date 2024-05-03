@@ -20,7 +20,6 @@ package com.illusivesoulworks.spectrelib;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
-import com.illusivesoulworks.spectrelib.network.ConfigSyncPacket;
 import com.illusivesoulworks.spectrelib.network.SpectreClientPayloadHandler;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,7 +32,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 @Mod(SpectreConstants.MOD_ID)
@@ -48,9 +47,10 @@ public class SpectreNeoForgeMod {
     eventBus.addListener(this::registerPayloadHandler);
   }
 
-  private void registerPayloadHandler(final RegisterPayloadHandlerEvent evt) {
-    evt.registrar(SpectreConstants.MOD_ID).play(ConfigSyncPacket.ID, ConfigSyncPacket::new,
-        handler -> handler.client(SpectreClientPayloadHandler.getInstance()::handleData));
+  private void registerPayloadHandler(final RegisterPayloadHandlersEvent evt) {
+    evt.registrar(SpectreConstants.MOD_ID)
+        .playToClient(SpectreConfigPayload.TYPE, SpectreConfigPayload.STREAM_CODEC,
+            SpectreClientPayloadHandler.getInstance()::handleData);
   }
 
   private void loadConfigs(final NewRegistryEvent evt) {
@@ -78,8 +78,8 @@ public class SpectreNeoForgeMod {
       if (!configData.isEmpty()) {
 
         for (SpectreConfigPayload configDatum : configData) {
-          PacketDistributor.PLAYER.with(serverPlayer)
-              .send(new ConfigSyncPacket(configDatum.contents, configDatum.fileName));
+          PacketDistributor.sendToPlayer(serverPlayer,
+              new SpectreConfigPayload(configDatum.contents, configDatum.fileName));
         }
       }
     }

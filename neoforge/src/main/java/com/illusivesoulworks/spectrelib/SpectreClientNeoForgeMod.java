@@ -23,11 +23,13 @@ import com.illusivesoulworks.spectrelib.config.SpectreConfigTracker;
 import com.illusivesoulworks.spectrelib.config.client.screen.ModConfigSelectScreen;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
 public class SpectreClientNeoForgeMod {
@@ -44,10 +46,13 @@ public class SpectreClientNeoForgeMod {
         SpectreConstants.LOG.info("Registering config screens for mod {} with {} config(s)", modId,
             count);
         String displayName = modContainer.getModInfo().getDisplayName();
-        modContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-            () -> new ConfigScreenHandler.ConfigScreenFactory(
-                (mc, screen) -> new ModConfigSelectScreen(modConfigs, screen,
-                    Component.literal(displayName))));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, new IConfigScreenFactory() {
+          @Nonnull
+          @Override
+          public Screen createScreen(@Nonnull Minecraft minecraft, @Nonnull Screen screen) {
+            return new ModConfigSelectScreen(modConfigs, screen, Component.literal(displayName));
+          }
+        });
       }
     });
   }

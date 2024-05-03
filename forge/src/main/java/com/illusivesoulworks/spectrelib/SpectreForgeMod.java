@@ -20,7 +20,6 @@ package com.illusivesoulworks.spectrelib;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
-import com.illusivesoulworks.spectrelib.network.ConfigSyncPacket;
 import com.illusivesoulworks.spectrelib.network.SpectreForgePacketHandler;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -80,7 +79,7 @@ public class SpectreForgeMod {
 
         for (SpectreConfigPayload configDatum : configData) {
           SpectreForgePacketHandler.INSTANCE.send(
-              new ConfigSyncPacket(configDatum.contents, configDatum.fileName),
+              new SpectreConfigPayload(configDatum.contents, configDatum.fileName),
               PacketDistributor.PLAYER.with(serverPlayer));
         }
       }

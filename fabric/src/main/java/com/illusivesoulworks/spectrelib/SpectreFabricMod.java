@@ -23,20 +23,17 @@ import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class SpectreFabricMod implements ModInitializer {
 
-  public static final ResourceLocation CONFIG_SYNC =
-      new ResourceLocation(SpectreConstants.MOD_ID, "config_sync");
-
   @Override
   public void onInitialize() {
+    PayloadTypeRegistry.playS2C()
+        .register(SpectreConfigPayload.TYPE, SpectreConfigPayload.STREAM_CODEC);
     ServerLifecycleEvents.SERVER_STARTING.register(SpectreConfigEvents::onLoadServer);
     ServerLifecycleEvents.SERVER_STOPPED.register(server -> SpectreConfigEvents.onUnloadServer());
     ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -46,9 +43,7 @@ public class SpectreFabricMod implements ModInitializer {
       if (!configData.isEmpty()) {
 
         for (SpectreConfigPayload configDatum : configData) {
-          FriendlyByteBuf buf = PacketByteBufs.create();
-          configDatum.write(buf);
-          ServerPlayNetworking.send(serverPlayer, SpectreFabricMod.CONFIG_SYNC, buf);
+          ServerPlayNetworking.send(serverPlayer, configDatum);
         }
       }
     });

@@ -18,7 +18,13 @@
 package com.illusivesoulworks.spectrelib.network;
 
 import com.illusivesoulworks.spectrelib.SpectreConstants;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
+import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.SimpleChannel;
 
@@ -34,10 +40,19 @@ public class SpectreForgePacketHandler {
         .clientAcceptedVersions((status, version) -> true)
         .serverAcceptedVersions((status, version) -> true).simpleChannel();
 
-    INSTANCE.messageBuilder(ConfigSyncPacket.class)
-        .encoder(ConfigSyncPacket::encoder)
-        .decoder(ConfigSyncPacket::decoder)
-        .consumerNetworkThread(ConfigSyncPacket::messageConsumer)
+    INSTANCE.messageBuilder(SpectreConfigPayload.class)
+        .encoder((payload, friendlyByteBuf) -> SpectreConfigPayload.STREAM_CODEC.encode(
+            (RegistryFriendlyByteBuf) friendlyByteBuf, payload))
+        .decoder(friendlyByteBuf -> SpectreConfigPayload.STREAM_CODEC.decode(
+            (RegistryFriendlyByteBuf) friendlyByteBuf))
+        .consumerNetworkThread(SpectreForgePacketHandler::messageConsumer)
         .add();
+  }
+
+  private static void messageConsumer(SpectreConfigPayload payload,
+                                      CustomPayloadEvent.Context ctx) {
+    ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+        () -> () -> SpectreConfigNetwork.acceptSyncedConfigs(payload.contents, payload.fileName)));
+    ctx.setPacketHandled(true);
   }
 }

@@ -33,7 +33,7 @@ public class SpectreConfigNetwork {
       return new ArrayList<>();
     }
     FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-    buf.writeMap(configData, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeByteArray);
+    buf.writeMap(configData, FriendlyByteBuf::writeUtf, (k, v) -> k.writeByteArray(v));
     return configData.entrySet().stream()
         .map(e -> new SpectreConfigPayload(e.getValue(), e.getKey()))
         .toList();
