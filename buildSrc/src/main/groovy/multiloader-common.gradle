@@ -100,12 +100,6 @@ processResources {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            artifact jar
-        }
-    }
     repositories {
 
         if (project.hasProperty('urlMaven')) {
