@@ -10,7 +10,7 @@
     "license": "LGPL-2.1-only",
     "environment": "*",
     "entrypoints": {
-      "spectrelib": [
+      "spectrelib-config": [
         "com.illusivesoulworks.spectrelib.SpectreTest"
       ]
     },

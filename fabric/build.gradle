@@ -37,6 +37,7 @@ loom {
     runs {
         client {
             client()
+            source sourceSets.test
             setConfigName("Fabric Client")
             ideConfigGenerated(true)
             runDir("runs/client")

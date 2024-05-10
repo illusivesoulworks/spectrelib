@@ -7,12 +7,15 @@ import com.illusivesoulworks.spectrelib.config.client.screen.ModConfigSelectScre
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 
 public class ModMenuPlugin implements ModMenuApi {
+
+  private static final Set<String> LOGGED = new HashSet<>();
 
   @Override
   public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
@@ -22,8 +25,12 @@ public class ModMenuPlugin implements ModMenuApi {
     configs.forEach((key, modConfigs) -> {
       FabricLoader.getInstance().getModContainer(key).ifPresent(modContainer -> {
         int count = modConfigs.values().stream().mapToInt(Set::size).sum();
-        SpectreConstants.LOG.info("Registering config screens for mod {} with {} config(s)", key,
-            count);
+
+        if (!LOGGED.contains(key)) {
+          SpectreConstants.LOG.info("Registering config screens for mod {} with {} config(s)", key,
+              count);
+          LOGGED.add(key);
+        }
         String displayName = modContainer.getMetadata().getName();
         result.put(key, screen -> new ModConfigSelectScreen(modConfigs, screen,
             Component.literal(displayName)));
