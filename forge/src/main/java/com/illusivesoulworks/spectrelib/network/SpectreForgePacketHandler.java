@@ -34,7 +34,8 @@ public class SpectreForgePacketHandler {
   public static SimpleChannel INSTANCE;
 
   public static void setup() {
-    INSTANCE = ChannelBuilder.named(new ResourceLocation(SpectreConstants.MOD_ID, "main"))
+    INSTANCE = ChannelBuilder
+        .named(ResourceLocation.fromNamespaceAndPath(SpectreConstants.MOD_ID, "main"))
         .networkProtocolVersion(PROTOCOL_VERSION)
         .clientAcceptedVersions((status, version) -> true)
         .serverAcceptedVersions((status, version) -> true).simpleChannel();

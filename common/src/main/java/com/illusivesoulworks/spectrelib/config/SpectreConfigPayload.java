@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 public class SpectreConfigPayload implements CustomPacketPayload {
 
   public static final Type<SpectreConfigPayload> TYPE =
-      new Type<>(new ResourceLocation(SpectreConstants.MOD_ID, "sync"));
+      new Type<>(ResourceLocation.fromNamespaceAndPath(SpectreConstants.MOD_ID, "sync"));
   public static final StreamCodec<FriendlyByteBuf, SpectreConfigPayload> STREAM_CODEC =
       StreamCodec.composite(
           ByteBufCodecs.BYTE_ARRAY,

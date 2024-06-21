@@ -70,7 +70,7 @@ public class SpectreTestConfig {
               s -> s instanceof String);
       this.validatedList1 = builder.comment("Validated List Comment").defineList("listOfItems1",
           Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-          s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1) && !s1.isBlank());
+          s -> s instanceof String s1 && ResourceLocation.tryParse(s1) != null && !s1.isBlank());
 
       builder.push("nested");
       this.stringValue =
@@ -85,7 +85,7 @@ public class SpectreTestConfig {
               s -> s instanceof String);
       this.validatedList = builder.comment("Validated List Comment").defineList("listOfItems",
           Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-          s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1));
+          s -> s instanceof String s1 && ResourceLocation.tryParse(s1) != null);
       builder.pop();
     }
   }
