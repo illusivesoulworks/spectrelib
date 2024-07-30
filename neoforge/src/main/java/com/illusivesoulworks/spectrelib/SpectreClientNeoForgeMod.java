@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -45,12 +46,12 @@ public class SpectreClientNeoForgeMod {
         int count = modConfigs.values().stream().mapToInt(Set::size).sum();
         SpectreConstants.LOG.info("Registering config screens for mod {} with {} config(s)", modId,
             count);
-        String displayName = modContainer.getModInfo().getDisplayName();
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, new IConfigScreenFactory() {
           @Nonnull
           @Override
-          public Screen createScreen(@Nonnull Minecraft minecraft, @Nonnull Screen screen) {
-            return new ModConfigSelectScreen(modConfigs, screen, Component.literal(displayName));
+          public Screen createScreen(@Nonnull ModContainer modContainer1, @Nonnull Screen screen) {
+            return new ModConfigSelectScreen(modConfigs, screen,
+                Component.literal(modContainer1.getModInfo().getDisplayName()));
           }
         });
       }
