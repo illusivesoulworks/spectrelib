@@ -207,6 +207,16 @@ public class EditConfigScreen extends Screen {
       });
     }
 
+    @Override
+    public int getRowWidth() {
+      return super.getRowWidth() + 50;
+    }
+
+    @Override
+    protected int scrollBarX() {
+      return super.scrollBarX() + 25;
+    }
+
     public void renderWidget(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
       super.renderWidget(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
@@ -520,7 +530,7 @@ public class EditConfigScreen extends Screen {
 
     public ConfigEntry(@Nullable List<FormattedCharSequence> pTooltip, Component pLabel) {
       this.tooltip = pTooltip;
-      this.label = Objects.requireNonNull(EditConfigScreen.this.minecraft).font.split(pLabel, 175);
+      this.label = Objects.requireNonNull(EditConfigScreen.this.minecraft).font.split(pLabel, 125);
     }
 
     @Nonnull
