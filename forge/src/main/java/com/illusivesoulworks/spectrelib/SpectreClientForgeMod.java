@@ -33,7 +33,7 @@ import net.minecraftforge.fml.ModList;
 public class SpectreClientForgeMod {
 
   public static void setup() {
-    MinecraftForge.EVENT_BUS.addListener(SpectreClientForgeMod::onPlayerLoggedOut);
+    ClientPlayerNetworkEvent.LoggingOut.BUS.addListener(SpectreClientForgeMod::onPlayerLoggedOut);
     ModList.get().forEachModContainer((modId, modContainer) -> {
       Map<String, Map<SpectreConfig.Type, Set<SpectreConfig>>> configs =
           SpectreConfigTracker.INSTANCE.getConfigsByMod();

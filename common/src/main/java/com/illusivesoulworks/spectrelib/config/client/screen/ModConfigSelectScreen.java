@@ -76,14 +76,6 @@ public class ModConfigSelectScreen extends Screen {
       }
     }
 
-    protected int getScrollbarPosition() {
-      return super.getScrollbarPosition() + 20;
-    }
-
-    public int getRowWidth() {
-      return super.getRowWidth() + 50;
-    }
-
     @Override
     protected void renderItem(@Nonnull GuiGraphics $$0, int $$1, int $$2, float $$3, int $$4,
                               int $$5, int $$6, int $$7, int $$8) {

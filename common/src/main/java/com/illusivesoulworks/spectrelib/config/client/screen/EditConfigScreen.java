@@ -207,22 +207,12 @@ public class EditConfigScreen extends Screen {
       });
     }
 
-    @Override
-    public int getRowWidth() {
-      return super.getRowWidth() + 100;
-    }
-
-    @Override
-    protected int getScrollbarPosition() {
-      return super.getScrollbarPosition() + 50;
-    }
-
     public void renderWidget(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
       super.renderWidget(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
 
       if (configEntry != null && configEntry.tooltip != null) {
-        EditConfigScreen.this.setTooltipForNextRenderPass(configEntry.tooltip);
+        guiGraphics.setTooltipForNextFrame(configEntry.tooltip, x, y);
       }
     }
   }
@@ -547,12 +537,12 @@ public class EditConfigScreen extends Screen {
 
       if (this.label.size() == 1) {
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(0), x, y + 5, 16777215, false);
+            this.label.get(0), x, y + 5, -2039584, true);
       } else if (this.label.size() >= 2) {
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(0), x, y, 16777215, false);
+            this.label.get(0), x, y, -2039584, true);
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(1), x, y + 10, 16777215, false);
+            this.label.get(1), x, y + 10, -2039584, true);
       }
     }
   }

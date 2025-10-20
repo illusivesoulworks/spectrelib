@@ -24,11 +24,10 @@ import com.illusivesoulworks.spectrelib.network.SpectreForgePacketHandler;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -39,14 +38,14 @@ import net.minecraftforge.registries.NewRegistryEvent;
 @Mod(SpectreConstants.MOD_ID)
 public class SpectreForgeMod {
 
-  public SpectreForgeMod() {
-    MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
-    MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
-    MinecraftForge.EVENT_BUS.addListener(this::onPlayerLoggedIn);
-    IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    eventBus.addListener(this::loadConfigs);
-    eventBus.addListener(this::setup);
-    eventBus.addListener(this::clientSetup);
+  public SpectreForgeMod(FMLJavaModLoadingContext context) {
+    ServerAboutToStartEvent.BUS.addListener(this::onServerAboutToStart);
+    ServerStoppedEvent.BUS.addListener(this::onServerStopped);
+    PlayerEvent.PlayerLoggedInEvent.BUS.addListener(this::onPlayerLoggedIn);
+    BusGroup busGroup = context.getModBusGroup();
+    NewRegistryEvent.getBus(busGroup).addListener(this::loadConfigs);
+    FMLCommonSetupEvent.getBus(busGroup).addListener(this::setup);
+    FMLClientSetupEvent.getBus(busGroup).addListener(this::clientSetup);
   }
 
   private void loadConfigs(final NewRegistryEvent evt) {
