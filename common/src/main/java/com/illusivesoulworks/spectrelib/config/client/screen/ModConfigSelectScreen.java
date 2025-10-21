@@ -13,6 +13,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -34,7 +36,7 @@ public class ModConfigSelectScreen extends Screen {
     this.configSelectionList = new ModConfigSelectionList(this.minecraft);
     this.addWidget(this.configSelectionList);
     this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onDone())
-        .bounds(this.width / 2 - 75, this.height - 28, 150, 20).build());
+                                 .bounds(this.width / 2 - 75, this.height - 28, 150, 20).build());
     super.init();
   }
 
@@ -60,6 +62,7 @@ public class ModConfigSelectScreen extends Screen {
   }
 
   class ModConfigSelectionList extends ObjectSelectionList<ModConfigSelectionList.Entry> {
+
     public ModConfigSelectionList(Minecraft mc) {
       super(mc, ModConfigSelectScreen.this.width, ModConfigSelectScreen.this.height - 75, 43, 24);
 
@@ -77,11 +80,10 @@ public class ModConfigSelectScreen extends Screen {
     }
 
     @Override
-    protected void renderItem(@Nonnull GuiGraphics $$0, int $$1, int $$2, float $$3, int $$4,
-                              int $$5, int $$6, int $$7, int $$8) {
-      Entry $$9 = this.getEntry($$4);
-      $$9.render($$0, $$4, $$6, $$5, $$7, $$8, $$1, $$2, Objects.equals(this.getHovered(), $$9),
-          $$3);
+    protected void renderItem(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              float partialTicks, @Nonnull ModConfigSelectionList.Entry entry) {
+      entry.renderContent(guiGraphics, mouseX, mouseY, Objects.equals(this.getHovered(), entry),
+                          partialTicks);
     }
 
     public class Entry extends ObjectSelectionList.Entry<ModConfigSelectionList.Entry> {
@@ -94,41 +96,45 @@ public class ModConfigSelectScreen extends Screen {
         this.type = config.getType().toString();
         this.fileName = config.getFileName();
         this.button = Button.builder(Component.literal(fileName),
-            (button) -> {
-              CommentedConfig commentedConfig =
-                  config.getConfigData(SpectreConfig.InstanceType.GLOBAL);
-              Consumer<Map<String, Object>> consumer = (values) -> {
-                commentedConfig.valueMap().putAll(values);
-                config.setConfigData(SpectreConfig.InstanceType.GLOBAL, commentedConfig, false);
-                config.fireLoad(true);
-              };
-              SpectreConfigSpec spec = config.getSpec();
-              EditConfigScreen editConfigScreen =
-                  new EditConfigScreen(Component.literal(this.fileName), Component.empty(),
-                      spec.getSpec().valueMap(), spec.getValues().valueMap(),
-                      commentedConfig.valueMap(), ModConfigSelectionList.this.minecraft.screen,
-                      consumer);
-              ModConfigSelectionList.this.minecraft.setScreen(editConfigScreen);
-            }).build();
+                                     (button) -> {
+                                       CommentedConfig commentedConfig =
+                                           config.getConfigData(SpectreConfig.InstanceType.GLOBAL);
+                                       Consumer<Map<String, Object>> consumer = (values) -> {
+                                         commentedConfig.valueMap().putAll(values);
+                                         config.setConfigData(SpectreConfig.InstanceType.GLOBAL,
+                                                              commentedConfig, false);
+                                         config.fireLoad(true);
+                                       };
+                                       SpectreConfigSpec spec = config.getSpec();
+                                       EditConfigScreen editConfigScreen =
+                                           new EditConfigScreen(Component.literal(this.fileName),
+                                                                Component.empty(),
+                                                                spec.getSpec().valueMap(),
+                                                                spec.getValues().valueMap(),
+                                                                commentedConfig.valueMap(),
+                                                                ModConfigSelectionList.this.minecraft.screen,
+                                                                consumer);
+                                       ModConfigSelectionList.this.minecraft.setScreen(
+                                           editConfigScreen);
+                                     }).build();
       }
 
-      public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, int $$3, int $$4, int $$5,
-                         int mouseX, int mouseY, boolean $$8, float delta) {
+      public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                                boolean isHovering, float delta) {
         this.button.setWidth(ModConfigSelectionList.this.getRowWidth() - 10);
-        this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), y);
+        this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), this.getContentY());
         this.button.render(guiGraphics, mouseX, mouseY, delta);
         guiGraphics.drawString(ModConfigSelectScreen.this.font, this.type,
-            ModConfigSelectScreen.this.width / 2 - 180, y + this.button.getHeight() / 2 - 3,
-            16777215);
+                               ModConfigSelectScreen.this.width / 2 - 180,
+                               this.getContentY() + this.button.getHeight() / 2 - 3, 16777215);
       }
 
-      public boolean mouseClicked(double x, double y, int button) {
-        return this.button.mouseClicked(x, y, button);
+      public boolean mouseClicked(@Nonnull MouseButtonEvent evt, boolean isClicked) {
+        return this.button.mouseClicked(evt, isClicked);
       }
 
-      public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return this.button.keyPressed(keyCode, scanCode, modifiers) ||
-            super.keyPressed(keyCode, scanCode, modifiers);
+      public boolean keyPressed(@Nonnull KeyEvent keyEvent) {
+        return this.button.keyPressed(keyEvent) || super.keyPressed(keyEvent);
       }
 
       @Nonnull

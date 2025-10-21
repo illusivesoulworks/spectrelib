@@ -33,6 +33,7 @@ import net.minecraft.util.FormattedCharSequence;
 import org.apache.commons.lang3.EnumUtils;
 
 public class EditConfigScreen extends Screen {
+
   private final Set<String> invalidEntries = new HashSet<>();
   private final Map<String, Object> spec;
   private final Map<String, Object> specValues;
@@ -112,14 +113,16 @@ public class EditConfigScreen extends Screen {
 
     public ConfigList(final Map<String, Object> spec, final Map<String, Object> specValues) {
       super(Objects.requireNonNull(EditConfigScreen.this.minecraft), EditConfigScreen.this.width,
-          EditConfigScreen.this.height - 75, 43, 24);
+            EditConfigScreen.this.height - 75, 43, 24);
       spec.forEach((key, obj) -> {
 
         if (obj instanceof SpectreConfigSpec.ValueSpec value) {
           Component nameComponent =
               Component.translatableWithFallback(value.getLocalizationKey() + ".name", key);
           Component defaultComponent = Component.translatable("editGamerule.default",
-              Component.literal(value.getDefault().toString())).withStyle(ChatFormatting.GRAY);
+                                                              Component.literal(
+                                                                  value.getDefault().toString()))
+              .withStyle(ChatFormatting.GRAY);
           String s1 = value.getLocalizationKey() + ".description";
           String comment = value.getComment() != null ? value.getComment() : "";
           String range = "";
@@ -202,7 +205,7 @@ public class EditConfigScreen extends Screen {
           Component nameComponent = Component.literal(key);
           this.addEntry(
               new SectionEntry(new ArrayList<>(), nameComponent, abstractConfig.valueMap(),
-                  abstractConfig1.valueMap(), abstractConfig2.valueMap()));
+                               abstractConfig1.valueMap(), abstractConfig2.valueMap()));
         }
       });
     }
@@ -239,23 +242,23 @@ public class EditConfigScreen extends Screen {
         Consumer<Map<String, Object>> consumer = values::putAll;
         EditConfigScreen newScreen =
             new EditConfigScreen(EditConfigScreen.this.title, pLabel, spec, specValues, values,
-                EditConfigScreen.this, consumer);
+                                 EditConfigScreen.this, consumer);
         Minecraft.getInstance().setScreen(newScreen);
       }).build();
       this.children.add(this.button);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.button.setX(x);
-      this.button.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.button.setX(this.getContentX() + LABEL_WIDTH);
+      this.button.setY(this.getContentY());
       this.button.setWidth(EditConfigScreen.this.configList.getRowWidth() - 5);
       this.button.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class ListConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final Button button;
 
     public ListConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -268,7 +271,7 @@ public class EditConfigScreen extends Screen {
         if (EditConfigScreen.this.spec.get(key) instanceof SpectreConfigSpec.ValueSpec valueSpec) {
           ListConfigScreen listConfigScreen =
               new ListConfigScreen(EditConfigScreen.this.title, EditConfigScreen.this.subtitle,
-                  list, EditConfigScreen.this, valueSpec::test, (l) -> {
+                                   list, EditConfigScreen.this, valueSpec::test, (l) -> {
                 list.clear();
                 list.addAll(l);
               });
@@ -278,17 +281,17 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.button);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.button.setX(x + offset - 101);
-      this.button.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.button.setX(this.getContentX() + LABEL_WIDTH);
+      this.button.setY(this.getContentY());
       this.button.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class BooleanConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final CycleButton<Boolean> checkbox;
 
     public BooleanConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -298,21 +301,21 @@ public class EditConfigScreen extends Screen {
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
           .create(10, 5, 100, 20, pLabel,
-              (button, value) -> EditConfigScreen.this.values.put(key, value));
+                  (button, value) -> EditConfigScreen.this.values.put(key, value));
       this.children.add(this.checkbox);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.checkbox.setX(x + offset - 101);
-      this.checkbox.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
+      this.checkbox.setY(this.getContentY());
       this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class IntegerConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final EditBox input;
 
     public IntegerConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -320,7 +323,7 @@ public class EditConfigScreen extends Screen {
       super(pTooltip, pLabel);
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
-              pLabel.copy().append("\n").append(p_101177_).append("\n"));
+                      pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
@@ -348,17 +351,17 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 100);
-      this.input.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.input.setX(this.getContentX() + LABEL_WIDTH);
+      this.input.setY(this.getContentY());
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class LongConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final EditBox input;
 
     public LongConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -366,7 +369,7 @@ public class EditConfigScreen extends Screen {
       super(pTooltip, pLabel);
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
-              pLabel.copy().append("\n").append(p_101177_).append("\n"));
+                      pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
@@ -394,17 +397,17 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 100);
-      this.input.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.input.setX(this.getContentX() + LABEL_WIDTH);
+      this.input.setY(this.getContentY());
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class DoubleConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final EditBox input;
 
     public DoubleConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -412,7 +415,7 @@ public class EditConfigScreen extends Screen {
       super(pTooltip, pLabel);
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
-              pLabel.copy().append("\n").append(p_101177_).append("\n"));
+                      pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
@@ -440,17 +443,17 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 100);
-      this.input.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.input.setX(this.getContentX() + LABEL_WIDTH);
+      this.input.setY(this.getContentY());
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class StringConfigEntry extends EditConfigScreen.ConfigEntry {
+
     private final EditBox input;
 
     public StringConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -458,7 +461,7 @@ public class EditConfigScreen extends Screen {
       super(pTooltip, pLabel);
       this.input =
           new EditBox(Objects.requireNonNull(EditConfigScreen.this.minecraft).font, 10, 5, 98, 20,
-              pLabel.copy().append("\n").append(p_101177_).append("\n"));
+                      pLabel.copy().append("\n").append(p_101177_).append("\n"));
       this.input.setValue(EditConfigScreen.this.values.get(key).toString());
       this.input.setResponder((newValue) -> {
         Object obj = EditConfigScreen.this.spec.get(key);
@@ -478,17 +481,17 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.input.setX(x + offset - 100);
-      this.input.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.input.setX(this.getContentX() + LABEL_WIDTH);
+      this.input.setY(this.getContentY());
       this.input.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public class EnumConfigEntry<T extends Enum<T>> extends EditConfigScreen.ConfigEntry {
+
     private final CycleButton<Object> checkbox;
 
     public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
@@ -507,30 +510,33 @@ public class EditConfigScreen extends Screen {
           .displayOnlyValue().withCustomNarration(
               (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
           .create(10, 5, 100, 20, pLabel,
-              (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
+                  (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
       this.children.add(this.checkbox);
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
-      this.renderLabel(guiGraphics, y, x);
-      this.checkbox.setX(x + offset - 101);
-      this.checkbox.setY(y);
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
+      this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
+      this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
+      this.checkbox.setY(this.getContentY());
       this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
   public abstract class ConfigEntry
       extends ContainerObjectSelectionList.Entry<EditConfigScreen.ConfigEntry> {
+
     private final List<FormattedCharSequence> label;
     @Nullable
     private final List<FormattedCharSequence> tooltip;
     protected final List<AbstractWidget> children = new ArrayList<>();
+    protected static final int LABEL_WIDTH = 140;
 
     public ConfigEntry(@Nullable List<FormattedCharSequence> pTooltip, Component pLabel) {
       this.tooltip = pTooltip;
-      this.label = Objects.requireNonNull(EditConfigScreen.this.minecraft).font.split(pLabel, 125);
+      this.label = Objects.requireNonNull(EditConfigScreen.this.minecraft).font.split(pLabel,
+                                                                                      LABEL_WIDTH
+                                                                                          - 10);
     }
 
     @Nonnull
@@ -547,12 +553,12 @@ public class EditConfigScreen extends Screen {
 
       if (this.label.size() == 1) {
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(0), x, y + 5, -2039584, true);
+                               this.label.getFirst(), x, y + 5, -2039584, true);
       } else if (this.label.size() >= 2) {
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(0), x, y, -2039584, true);
+                               this.label.get(0), x, y, -2039584, true);
         guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-            this.label.get(1), x, y + 10, -2039584, true);
+                               this.label.get(1), x, y + 10, -2039584, true);
       }
     }
   }

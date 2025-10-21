@@ -101,7 +101,7 @@ public class ListConfigScreen extends Screen {
 
     public ListConfig() {
       super(Objects.requireNonNull(ListConfigScreen.this.minecraft), ListConfigScreen.this.width,
-          ListConfigScreen.this.height - 75, 43, 24);
+            ListConfigScreen.this.height - 75, 43, 24);
 
       for (int i = 0; i < ListConfigScreen.this.values.size(); i++) {
         this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
@@ -144,6 +144,7 @@ public class ListConfigScreen extends Screen {
   }
 
   public final class Entry extends ContainerObjectSelectionList.Entry<ListConfigScreen.Entry> {
+
     private EditBox input = null;
     private final Button addButton;
     private Button removeButton = null;
@@ -155,7 +156,7 @@ public class ListConfigScreen extends Screen {
         String currentValue = ListConfigScreen.this.values.get(index);
         this.input =
             new EditBox(Objects.requireNonNull(ListConfigScreen.this.minecraft).font, 10, 5,
-                width - 45, 20, Component.literal(currentValue));
+                        width - 45, 20, Component.literal(currentValue));
         this.input.setValue(currentValue);
         this.input.setResponder((newValue) -> {
 
@@ -197,22 +198,22 @@ public class ListConfigScreen extends Screen {
       return this.children;
     }
 
-    public void render(@Nonnull GuiGraphics guiGraphics, int p_281471_, int y,
-                       int x, int offset, int p_283543_, int mouseX, int mouseY,
-                       boolean p_283227_, float delta) {
+    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              boolean isHovering, float delta) {
 
       if (this.input != null) {
-        this.input.setX(x);
-        this.input.setY(y);
+        this.input.setX(this.getContentX());
+        this.input.setY(this.getContentY());
         this.input.render(guiGraphics, mouseX, mouseY, delta);
       }
-      this.addButton.setX(x + offset - 42);
-      this.addButton.setY(y);
+      this.addButton.setX(this.getContentX() + this.input.getWidth() + 3);
+      this.addButton.setY(this.getContentY());
       this.addButton.render(guiGraphics, mouseX, mouseY, delta);
 
       if (this.removeButton != null) {
-        this.removeButton.setX(x + offset - 20);
-        this.removeButton.setY(y);
+        this.removeButton.setX(
+            this.getContentX() + this.input.getWidth() + this.addButton.getWidth() + 6);
+        this.removeButton.setY(this.getContentY());
         this.removeButton.render(guiGraphics, mouseX, mouseY, delta);
       }
     }
