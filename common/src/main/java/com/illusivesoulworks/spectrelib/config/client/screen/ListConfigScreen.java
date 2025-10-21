@@ -79,8 +79,8 @@ public class ListConfigScreen extends Screen {
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
     this.listConfig.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
+    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
   }
 
   private void updateDoneButton() {
@@ -149,23 +149,25 @@ public class ListConfigScreen extends Screen {
     private final Button addButton;
     private Button removeButton = null;
     private final List<AbstractWidget> children = new ArrayList<>();
+    private final int boxWidth;
 
     public Entry(int index, int width) {
+      this.boxWidth = width - 45;
 
       if (index >= 0) {
         String currentValue = ListConfigScreen.this.values.get(index);
         this.input =
             new EditBox(Objects.requireNonNull(ListConfigScreen.this.minecraft).font, 10, 5,
-                        width - 45, 20, Component.literal(currentValue));
+                        this.boxWidth, 20, Component.literal(currentValue));
         this.input.setValue(currentValue);
         this.input.setResponder((newValue) -> {
 
           if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
-            this.input.setTextColor(14737632);
+            this.input.setTextColor(-2039584);
             ListConfigScreen.this.values.set(index, newValue);
             ListConfigScreen.this.clearInvalid(index);
           } else {
-            this.input.setTextColor(16711680);
+            this.input.setTextColor(-65536);
             ListConfigScreen.this.markInvalid(index);
           }
         });
@@ -206,13 +208,13 @@ public class ListConfigScreen extends Screen {
         this.input.setY(this.getContentY());
         this.input.render(guiGraphics, mouseX, mouseY, delta);
       }
-      this.addButton.setX(this.getContentX() + this.input.getWidth() + 3);
+      this.addButton.setX(this.getContentX() + this.boxWidth + 3);
       this.addButton.setY(this.getContentY());
       this.addButton.render(guiGraphics, mouseX, mouseY, delta);
 
       if (this.removeButton != null) {
         this.removeButton.setX(
-            this.getContentX() + this.input.getWidth() + this.addButton.getWidth() + 6);
+            this.getContentX() + this.boxWidth + this.addButton.getWidth() + 6);
         this.removeButton.setY(this.getContentY());
         this.removeButton.render(guiGraphics, mouseX, mouseY, delta);
       }

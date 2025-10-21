@@ -91,8 +91,8 @@ public class EditConfigScreen extends Screen {
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
     this.configList.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
+    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
   }
 
   private void updateDoneButton() {
@@ -339,11 +339,11 @@ public class EditConfigScreen extends Screen {
           }
 
           if (flag && valueSpec.test(i)) {
-            this.input.setTextColor(14737632);
+            this.input.setTextColor(-2039584);
             EditConfigScreen.this.values.put(key, i);
             EditConfigScreen.this.clearInvalid(key);
           } else {
-            this.input.setTextColor(16711680);
+            this.input.setTextColor(-65536);
             EditConfigScreen.this.markInvalid(key);
           }
         }
@@ -385,11 +385,11 @@ public class EditConfigScreen extends Screen {
           }
 
           if (flag && valueSpec.test(i)) {
-            this.input.setTextColor(14737632);
+            this.input.setTextColor(-2039584);
             EditConfigScreen.this.values.put(key, i);
             EditConfigScreen.this.clearInvalid(key);
           } else {
-            this.input.setTextColor(16711680);
+            this.input.setTextColor(-65536);
             EditConfigScreen.this.markInvalid(key);
           }
         }
@@ -431,11 +431,11 @@ public class EditConfigScreen extends Screen {
           }
 
           if (flag && valueSpec.test(i)) {
-            this.input.setTextColor(14737632);
+            this.input.setTextColor(-2039584);
             EditConfigScreen.this.values.put(key, i);
             EditConfigScreen.this.clearInvalid(key);
           } else {
-            this.input.setTextColor(16711680);
+            this.input.setTextColor(-65536);
             EditConfigScreen.this.markInvalid(key);
           }
         }
@@ -469,11 +469,11 @@ public class EditConfigScreen extends Screen {
         if (obj instanceof SpectreConfigSpec.ValueSpec valueSpec) {
 
           if (valueSpec.test(newValue)) {
-            this.input.setTextColor(14737632);
+            this.input.setTextColor(-2039584);
             EditConfigScreen.this.values.put(key, newValue);
             EditConfigScreen.this.clearInvalid(key);
           } else {
-            this.input.setTextColor(16711680);
+            this.input.setTextColor(-65536);
             EditConfigScreen.this.markInvalid(key);
           }
         }

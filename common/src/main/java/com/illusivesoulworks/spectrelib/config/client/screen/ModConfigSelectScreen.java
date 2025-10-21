@@ -50,7 +50,7 @@ public class ModConfigSelectScreen extends Screen {
   @Override
   public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
+    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
     this.configSelectionList.render(guiGraphics, x, y, delta);
   }
 
@@ -126,7 +126,7 @@ public class ModConfigSelectScreen extends Screen {
         this.button.render(guiGraphics, mouseX, mouseY, delta);
         guiGraphics.drawString(ModConfigSelectScreen.this.font, this.type,
                                ModConfigSelectScreen.this.width / 2 - 180,
-                               this.getContentY() + this.button.getHeight() / 2 - 3, 16777215);
+                               this.getContentY() + this.button.getHeight() / 2 - 3, -1);
       }
 
       public boolean mouseClicked(@Nonnull MouseButtonEvent evt, boolean isClicked) {
