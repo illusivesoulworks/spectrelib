@@ -30,6 +30,10 @@ repositories {
         url = 'https://maven.blamejared.com'
     }
     maven { url = "https://maven.terraformersmc.com" }
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
 }
 
 dependencies {

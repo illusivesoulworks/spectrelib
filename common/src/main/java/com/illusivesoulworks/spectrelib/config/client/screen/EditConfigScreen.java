@@ -12,8 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,7 +28,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.commons.lang3.EnumUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EditConfigScreen extends Screen {
 
@@ -88,7 +87,7 @@ public class EditConfigScreen extends Screen {
     }
   }
 
-  public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
     this.configList.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
@@ -220,7 +219,7 @@ public class EditConfigScreen extends Screen {
       return super.scrollBarX() + 25;
     }
 
-    public void renderWidget(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
       super.renderWidget(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
 
@@ -248,7 +247,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.button);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.button.setX(this.getContentX() + LABEL_WIDTH);
       this.button.setY(this.getContentY());
@@ -281,7 +280,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.button);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.button.setX(this.getContentX() + LABEL_WIDTH);
@@ -305,7 +304,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.checkbox);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
@@ -351,7 +350,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
@@ -397,7 +396,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
@@ -443,7 +442,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
@@ -481,7 +480,7 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
@@ -492,29 +491,22 @@ public class EditConfigScreen extends Screen {
 
   public class EnumConfigEntry<T extends Enum<T>> extends EditConfigScreen.ConfigEntry {
 
-    private final CycleButton<Object> checkbox;
+    private final CycleButton<T> checkbox;
 
     public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                            String p_101103_, String key, Class<T> clazz) {
       super(pTooltip, pLabel);
-      this.checkbox = CycleButton.builder((t) -> {
-            T en = EnumUtils.getEnum(clazz, t.toString());
-            if (en != null) {
-              return Component.literal(en.name());
-            }
-            return Component.literal("ERROR");
-          })
-          .withValues(clazz.getEnumConstants())
-          .withInitialValue(
-              EnumUtils.getEnum(clazz, EditConfigScreen.this.values.get(key).toString()))
-          .displayOnlyValue().withCustomNarration(
-              (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
-          .create(10, 5, 100, 20, pLabel,
-                  (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
+      this.checkbox =
+          CycleButton.builder((val) -> pLabel, (T) EditConfigScreen.this.values.get(key))
+              .withValues(clazz.getEnumConstants())
+              .displayOnlyValue().withCustomNarration(
+                  (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
+              .create(10, 5, 100, 20, pLabel,
+                      (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
       this.children.add(this.checkbox);
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
@@ -539,12 +531,12 @@ public class EditConfigScreen extends Screen {
                                                                                           - 10);
     }
 
-    @Nonnull
+    @NotNull
     public List<? extends GuiEventListener> children() {
       return this.children;
     }
 
-    @Nonnull
+    @NotNull
     public List<? extends NarratableEntry> narratables() {
       return this.children;
     }

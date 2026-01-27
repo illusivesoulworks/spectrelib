@@ -20,7 +20,7 @@ package com.illusivesoulworks.spectrelib.network;
 import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -35,7 +35,7 @@ public class SpectreForgePacketHandler {
 
   public static void setup() {
     INSTANCE = ChannelBuilder
-        .named(ResourceLocation.fromNamespaceAndPath(SpectreConstants.MOD_ID, "main"))
+        .named(Identifier.fromNamespaceAndPath(SpectreConstants.MOD_ID, "main"))
         .networkProtocolVersion(PROTOCOL_VERSION)
         .clientAcceptedVersions((status, version) -> true)
         .serverAcceptedVersions((status, version) -> true).simpleChannel();

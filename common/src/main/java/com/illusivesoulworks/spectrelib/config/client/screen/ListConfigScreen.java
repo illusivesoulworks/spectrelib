@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -21,6 +20,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ListConfigScreen extends Screen {
 
@@ -76,7 +76,7 @@ public class ListConfigScreen extends Screen {
     }
   }
 
-  public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
     this.listConfig.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
@@ -190,17 +190,17 @@ public class ListConfigScreen extends Screen {
       }
     }
 
-    @Nonnull
+    @NotNull
     public List<? extends GuiEventListener> children() {
       return this.children;
     }
 
-    @Nonnull
+    @NotNull
     public List<? extends NarratableEntry> narratables() {
       return this.children;
     }
 
-    public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
 
       if (this.input != null) {

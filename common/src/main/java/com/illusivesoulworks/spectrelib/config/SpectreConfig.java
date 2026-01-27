@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SpectreConfig {
 
@@ -82,7 +82,7 @@ public class SpectreConfig {
     return this.getConfigData(InstanceType.GLOBAL);
   }
 
-  public void setConfigData(InstanceType type, @Nonnull final CommentedConfig configData, boolean create) {
+  public void setConfigData(InstanceType type, @NotNull final CommentedConfig configData, boolean create) {
     this.configData.put(type, configData);
     this.getSpec().setConfigData(configData, create);
   }

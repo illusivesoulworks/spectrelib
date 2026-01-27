@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -17,6 +16,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ModConfigSelectScreen extends Screen {
 
@@ -48,7 +48,7 @@ public class ModConfigSelectScreen extends Screen {
   }
 
   @Override
-  public void render(@Nonnull GuiGraphics guiGraphics, int x, int y, float delta) {
+  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
     super.render(guiGraphics, x, y, delta);
     guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
     this.configSelectionList.render(guiGraphics, x, y, delta);
@@ -80,8 +80,8 @@ public class ModConfigSelectScreen extends Screen {
     }
 
     @Override
-    protected void renderItem(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              float partialTicks, @Nonnull ModConfigSelectionList.Entry entry) {
+    protected void renderItem(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                              float partialTicks, @NotNull ModConfigSelectionList.Entry entry) {
       entry.renderContent(guiGraphics, mouseX, mouseY, Objects.equals(this.getHovered(), entry),
                           partialTicks);
     }
@@ -119,7 +119,7 @@ public class ModConfigSelectScreen extends Screen {
                                      }).build();
       }
 
-      public void renderContent(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
+      public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                                 boolean isHovering, float delta) {
         this.button.setWidth(ModConfigSelectionList.this.getRowWidth() - 10);
         this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), this.getContentY());
@@ -129,15 +129,15 @@ public class ModConfigSelectScreen extends Screen {
                                this.getContentY() + this.button.getHeight() / 2 - 3, -1);
       }
 
-      public boolean mouseClicked(@Nonnull MouseButtonEvent evt, boolean isClicked) {
+      public boolean mouseClicked(@NotNull MouseButtonEvent evt, boolean isClicked) {
         return this.button.mouseClicked(evt, isClicked);
       }
 
-      public boolean keyPressed(@Nonnull KeyEvent keyEvent) {
+      public boolean keyPressed(@NotNull KeyEvent keyEvent) {
         return this.button.keyPressed(keyEvent) || super.keyPressed(keyEvent);
       }
 
-      @Nonnull
+      @NotNull
       public Component getNarration() {
         return Component.literal(this.fileName);
       }

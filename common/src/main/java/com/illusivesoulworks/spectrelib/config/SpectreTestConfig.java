@@ -2,7 +2,7 @@ package com.illusivesoulworks.spectrelib.config;
 
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.equipment.ArmorType;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -69,7 +69,7 @@ public class SpectreTestConfig {
               s -> s instanceof String);
       this.validatedList1 = builder.comment("Validated List Comment").defineList("listOfItems1",
           Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-          s -> s instanceof String s1 && ResourceLocation.tryParse(s1) != null && !s1.isBlank());
+          s -> s instanceof String s1 && Identifier.tryParse(s1) != null && !s1.isBlank());
 
       builder.push("nested");
       this.stringValue =
@@ -84,7 +84,7 @@ public class SpectreTestConfig {
               s -> s instanceof String);
       this.validatedList = builder.comment("Validated List Comment").defineList("listOfItems",
           Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-          s -> s instanceof String s1 && ResourceLocation.tryParse(s1) != null);
+          s -> s instanceof String s1 && Identifier.tryParse(s1) != null);
       builder.pop();
     }
   }
