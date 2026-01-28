@@ -2,6 +2,7 @@ package com.illusivesoulworks.spectrelib.config.client.screen;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.google.common.collect.ImmutableList;
+import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -496,13 +497,21 @@ public class EditConfigScreen extends Screen {
     public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                            String p_101103_, String key, Class<T> clazz) {
       super(pTooltip, pLabel);
+      String id = (String) EditConfigScreen.this.values.get(key);
+      T obj = clazz.getEnumConstants()[0];
+
+      try {
+        obj = Enum.valueOf(clazz, id);
+      } catch (IllegalArgumentException e) {
+        SpectreConstants.LOG.error("Invalid enum value {} for {}", id, clazz.getSimpleName());
+      }
       this.checkbox =
-          CycleButton.builder((val) -> pLabel, (T) EditConfigScreen.this.values.get(key))
-              .withValues(clazz.getEnumConstants())
-              .displayOnlyValue().withCustomNarration(
-                  (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
-              .create(10, 5, 100, 20, pLabel,
-                      (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
+          CycleButton.builder((val) -> Component.literal(id), obj)
+            .withValues(clazz.getEnumConstants())
+            .displayOnlyValue().withCustomNarration(
+                (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
+            .create(10, 5, 100, 20, pLabel,
+                    (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
       this.children.add(this.checkbox);
     }
 
