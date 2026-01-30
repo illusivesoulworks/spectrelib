@@ -506,7 +506,7 @@ public class EditConfigScreen extends Screen {
         SpectreConstants.LOG.error("Invalid enum value {} for {}", id, clazz.getSimpleName());
       }
       this.checkbox =
-          CycleButton.builder((val) -> Component.literal(id), obj)
+          CycleButton.builder((val) -> Component.literal(val.toString()), obj)
             .withValues(clazz.getEnumConstants())
             .displayOnlyValue().withCustomNarration(
                 (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
