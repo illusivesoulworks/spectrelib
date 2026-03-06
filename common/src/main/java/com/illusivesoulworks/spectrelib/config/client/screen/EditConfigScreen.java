@@ -497,7 +497,7 @@ public class EditConfigScreen extends Screen {
     public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                            String p_101103_, String key, Class<T> clazz) {
       super(pTooltip, pLabel);
-      String id = (String) EditConfigScreen.this.values.get(key);
+      String id = EditConfigScreen.this.values.get(key).toString();
       T obj = clazz.getEnumConstants()[0];
 
       try {
