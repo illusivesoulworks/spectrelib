@@ -57,6 +57,10 @@ sourcesJar {
     from(rootProject.file("README.md"))
 }
 
+test {
+    failOnNoDiscoveredTests = false
+}
+
 jar {
     from(rootProject.file("COPYING"))
     from(rootProject.file("README.md"))
@@ -89,7 +93,7 @@ processResources {
             "license": license,
             "issues_url": issues_url,
             "sources_url": sources_url,
-            "description": project.description,
+            "description": mod_description,
             "neoforge_version": neoforge_version,
             "neoforge_version_range": neoforge_version_range,
             "forge_version": forge_version,

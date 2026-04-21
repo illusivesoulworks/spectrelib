@@ -15,7 +15,7 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib;
+package com.illusivesoulworks.spectretest;
 
 import com.illusivesoulworks.spectrelib.config.SpectreConfig;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigLoader;

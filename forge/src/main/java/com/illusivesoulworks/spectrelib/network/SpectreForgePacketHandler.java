@@ -21,9 +21,7 @@ import com.illusivesoulworks.spectrelib.SpectreConstants;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.SimpleChannel;
 
@@ -43,7 +41,7 @@ public class SpectreForgePacketHandler {
     INSTANCE.messageBuilder(SpectreConfigPayload.class)
         .encoder(
             (payload, friendlyByteBuf) -> SpectreConfigPayload.STREAM_CODEC.encode(friendlyByteBuf,
-                payload))
+                                                                                   payload))
         .decoder(SpectreConfigPayload.STREAM_CODEC::decode)
         .consumerNetworkThread(SpectreForgePacketHandler::messageConsumer)
         .add();
@@ -51,8 +49,10 @@ public class SpectreForgePacketHandler {
 
   private static void messageConsumer(SpectreConfigPayload payload,
                                       CustomPayloadEvent.Context ctx) {
-    ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> SpectreConfigNetwork.acceptSyncedConfigs(payload.contents, payload.fileName)));
+    if (ctx.isClientSide()) {
+      ctx.enqueueWork(
+          () -> SpectreConfigNetwork.acceptSyncedConfigs(payload.contents, payload.fileName));
+    }
     ctx.setPacketHandled(true);
   }
 }

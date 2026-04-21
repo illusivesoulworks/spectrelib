@@ -43,7 +43,7 @@ public class SpectreForgeMod {
     ServerStoppedEvent.BUS.addListener(this::onServerStopped);
     PlayerEvent.PlayerLoggedInEvent.BUS.addListener(this::onPlayerLoggedIn);
     BusGroup busGroup = context.getModBusGroup();
-    NewRegistryEvent.getBus(busGroup).addListener(this::loadConfigs);
+    NewRegistryEvent.BUS.addListener(this::loadConfigs);
     FMLCommonSetupEvent.getBus(busGroup).addListener(this::setup);
     FMLClientSetupEvent.getBus(busGroup).addListener(this::clientSetup);
   }

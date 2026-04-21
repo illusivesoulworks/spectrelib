@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -76,11 +76,11 @@ public class ListConfigScreen extends Screen {
     }
   }
 
-  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
-    super.render(guiGraphics, x, y, delta);
-    this.listConfig.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
-    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
+  public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y, float delta) {
+    super.extractRenderState(guiGraphics, x, y, delta);
+    this.listConfig.extractRenderState(guiGraphics, x, y, delta);
+    guiGraphics.centeredText(this.font, this.title, this.width / 2, 16, -1);
+    guiGraphics.centeredText(this.font, this.subtitle, this.width / 2, 30, -1);
   }
 
   private void updateDoneButton() {
@@ -200,23 +200,23 @@ public class ListConfigScreen extends Screen {
       return this.children;
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
                               boolean isHovering, float delta) {
 
       if (this.input != null) {
         this.input.setX(this.getContentX());
         this.input.setY(this.getContentY());
-        this.input.render(guiGraphics, mouseX, mouseY, delta);
+        this.input.extractRenderState(guiGraphics, mouseX, mouseY, delta);
       }
       this.addButton.setX(this.getContentX() + this.boxWidth + 3);
       this.addButton.setY(this.getContentY());
-      this.addButton.render(guiGraphics, mouseX, mouseY, delta);
+      this.addButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
 
       if (this.removeButton != null) {
         this.removeButton.setX(
             this.getContentX() + this.boxWidth + this.addButton.getWidth() + 6);
         this.removeButton.setY(this.getContentY());
-        this.removeButton.render(guiGraphics, mouseX, mouseY, delta);
+        this.removeButton.extractRenderState(guiGraphics, mouseX, mouseY, delta);
       }
     }
   }

@@ -34,7 +34,7 @@ public class SpectreClientForgeMod {
 
   public static void setup() {
     ClientPlayerNetworkEvent.LoggingOut.BUS.addListener(SpectreClientForgeMod::onPlayerLoggedOut);
-    ModList.get().forEachModContainer((modId, modContainer) -> {
+    ModList.forEachModContainer((modId, modContainer) -> {
       Map<String, Map<SpectreConfig.Type, Set<SpectreConfig>>> configs =
           SpectreConfigTracker.INSTANCE.getConfigsByMod();
       Map<SpectreConfig.Type, Set<SpectreConfig>> modConfigs = configs.get(modId);

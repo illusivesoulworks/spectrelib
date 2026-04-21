@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -88,11 +88,12 @@ public class EditConfigScreen extends Screen {
     }
   }
 
-  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
-    super.render(guiGraphics, x, y, delta);
-    this.configList.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
-    guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
+  public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y,
+                                 float delta) {
+    super.extractRenderState(guiGraphics, x, y, delta);
+    this.configList.extractRenderState(guiGraphics, x, y, delta);
+    guiGraphics.centeredText(this.font, this.title, this.width / 2, 16, -1);
+    guiGraphics.centeredText(this.font, this.subtitle, this.width / 2, 30, -1);
   }
 
   private void updateDoneButton() {
@@ -220,8 +221,9 @@ public class EditConfigScreen extends Screen {
       return super.scrollBarX() + 25;
     }
 
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
-      super.renderWidget(guiGraphics, x, y, delta);
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y,
+                                         float delta) {
+      super.extractWidgetRenderState(guiGraphics, x, y, delta);
       ConfigEntry configEntry = this.getHovered();
 
       if (configEntry != null && configEntry.tooltip != null) {
@@ -248,12 +250,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.button);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.button.setX(this.getContentX() + LABEL_WIDTH);
       this.button.setY(this.getContentY());
       this.button.setWidth(EditConfigScreen.this.configList.getRowWidth() - 5);
-      this.button.render(guiGraphics, mouseX, mouseY, delta);
+      this.button.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -281,12 +283,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.button);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.button.setX(this.getContentX() + LABEL_WIDTH);
       this.button.setY(this.getContentY());
-      this.button.render(guiGraphics, mouseX, mouseY, delta);
+      this.button.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -305,12 +307,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.checkbox);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
       this.checkbox.setY(this.getContentY());
-      this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
+      this.checkbox.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -351,12 +353,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
       this.input.setY(this.getContentY());
-      this.input.render(guiGraphics, mouseX, mouseY, delta);
+      this.input.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -397,12 +399,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
       this.input.setY(this.getContentY());
-      this.input.render(guiGraphics, mouseX, mouseY, delta);
+      this.input.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -443,12 +445,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
       this.input.setY(this.getContentY());
-      this.input.render(guiGraphics, mouseX, mouseY, delta);
+      this.input.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -481,12 +483,12 @@ public class EditConfigScreen extends Screen {
       this.children.add(this.input);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.input.setX(this.getContentX() + LABEL_WIDTH);
       this.input.setY(this.getContentY());
-      this.input.render(guiGraphics, mouseX, mouseY, delta);
+      this.input.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -507,20 +509,20 @@ public class EditConfigScreen extends Screen {
       }
       this.checkbox =
           CycleButton.builder((val) -> Component.literal(val.toString()), obj)
-            .withValues(clazz.getEnumConstants())
-            .displayOnlyValue().withCustomNarration(
-                (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
-            .create(10, 5, 100, 20, pLabel,
-                    (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
+              .withValues(clazz.getEnumConstants())
+              .displayOnlyValue().withCustomNarration(
+                  (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_))
+              .create(10, 5, 100, 20, pLabel,
+                      (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
       this.children.add(this.checkbox);
     }
 
-    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              boolean isHovering, float delta) {
+    public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               boolean isHovering, float delta) {
       this.renderLabel(guiGraphics, this.getContentY(), this.getContentX());
       this.checkbox.setX(this.getContentX() + LABEL_WIDTH);
       this.checkbox.setY(this.getContentY());
-      this.checkbox.render(guiGraphics, mouseX, mouseY, delta);
+      this.checkbox.extractRenderState(guiGraphics, mouseX, mouseY, delta);
     }
   }
 
@@ -550,16 +552,16 @@ public class EditConfigScreen extends Screen {
       return this.children;
     }
 
-    protected void renderLabel(GuiGraphics guiGraphics, int y, int x) {
+    protected void renderLabel(GuiGraphicsExtractor guiGraphics, int y, int x) {
 
       if (this.label.size() == 1) {
-        guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                               this.label.getFirst(), x, y + 5, -2039584, true);
+        guiGraphics.text(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
+                         this.label.getFirst(), x, y + 5, -2039584, true);
       } else if (this.label.size() >= 2) {
-        guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                               this.label.get(0), x, y, -2039584, true);
-        guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                               this.label.get(1), x, y + 10, -2039584, true);
+        guiGraphics.text(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
+                         this.label.get(0), x, y, -2039584, true);
+        guiGraphics.text(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
+                         this.label.get(1), x, y + 10, -2039584, true);
       }
     }
   }

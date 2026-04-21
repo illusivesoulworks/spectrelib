@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
@@ -48,10 +48,11 @@ public class ModConfigSelectScreen extends Screen {
   }
 
   @Override
-  public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
-    super.render(guiGraphics, x, y, delta);
-    guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
-    this.configSelectionList.render(guiGraphics, x, y, delta);
+  public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y,
+                                 float delta) {
+    super.extractRenderState(guiGraphics, x, y, delta);
+    guiGraphics.centeredText(this.font, this.title, this.width / 2, 16, -1);
+    this.configSelectionList.extractRenderState(guiGraphics, x, y, delta);
   }
 
   public void onClose() {
@@ -80,9 +81,9 @@ public class ModConfigSelectScreen extends Screen {
     }
 
     @Override
-    protected void renderItem(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                              float partialTicks, @NotNull ModConfigSelectionList.Entry entry) {
-      entry.renderContent(guiGraphics, mouseX, mouseY, Objects.equals(this.getHovered(), entry),
+    protected void extractItem(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                               float partialTicks, @NotNull ModConfigSelectionList.Entry entry) {
+      entry.extractContent(guiGraphics, mouseX, mouseY, Objects.equals(this.getHovered(), entry),
                           partialTicks);
     }
 
@@ -119,14 +120,14 @@ public class ModConfigSelectScreen extends Screen {
                                      }).build();
       }
 
-      public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                                boolean isHovering, float delta) {
+      public void extractContent(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
+                                 boolean isHovering, float delta) {
         this.button.setWidth(ModConfigSelectionList.this.getRowWidth() - 10);
         this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), this.getContentY());
-        this.button.render(guiGraphics, mouseX, mouseY, delta);
-        guiGraphics.drawString(ModConfigSelectScreen.this.font, this.type,
-                               ModConfigSelectScreen.this.width / 2 - 180,
-                               this.getContentY() + this.button.getHeight() / 2 - 3, -1);
+        this.button.extractRenderState(guiGraphics, mouseX, mouseY, delta);
+        guiGraphics.text(ModConfigSelectScreen.this.font, this.type,
+                         ModConfigSelectScreen.this.width / 2 - 180,
+                         this.getContentY() + this.button.getHeight() / 2 - 3, -1);
       }
 
       public boolean mouseClicked(@NotNull MouseButtonEvent evt, boolean isClicked) {

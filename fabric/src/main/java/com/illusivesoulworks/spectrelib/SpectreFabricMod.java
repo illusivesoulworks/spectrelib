@@ -32,7 +32,7 @@ public class SpectreFabricMod implements ModInitializer {
 
   @Override
   public void onInitialize() {
-    PayloadTypeRegistry.playS2C()
+    PayloadTypeRegistry.clientboundPlay()
         .register(SpectreConfigPayload.TYPE, SpectreConfigPayload.STREAM_CODEC);
     ServerLifecycleEvents.SERVER_STARTING.register(SpectreConfigEvents::onLoadServer);
     ServerLifecycleEvents.SERVER_STOPPED.register(server -> SpectreConfigEvents.onUnloadServer());
