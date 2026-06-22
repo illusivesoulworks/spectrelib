@@ -43,7 +43,7 @@ public class ModConfigSelectScreen extends Screen {
   void onDone() {
 
     if (this.minecraft != null) {
-      this.minecraft.setScreen(this.lastScreen);
+      this.minecraft.gui.setScreen(this.lastScreen);
     }
   }
 
@@ -58,7 +58,7 @@ public class ModConfigSelectScreen extends Screen {
   public void onClose() {
 
     if (this.minecraft != null) {
-      this.minecraft.setScreen(this.lastScreen);
+      this.minecraft.gui.setScreen(this.lastScreen);
     }
   }
 
@@ -113,9 +113,9 @@ public class ModConfigSelectScreen extends Screen {
                                                                 spec.getSpec().valueMap(),
                                                                 spec.getValues().valueMap(),
                                                                 commentedConfig.valueMap(),
-                                                                ModConfigSelectionList.this.minecraft.screen,
+                                                                ModConfigSelectionList.this.minecraft.gui.screen(),
                                                                 consumer);
-                                       ModConfigSelectionList.this.minecraft.setScreen(
+                                       ModConfigSelectionList.this.minecraft.gui.setScreen(
                                            editConfigScreen);
                                      }).build();
       }

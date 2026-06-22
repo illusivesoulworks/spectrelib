@@ -26,6 +26,7 @@ import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -67,13 +68,13 @@ public class EditConfigScreen extends Screen {
           onDone.accept(this.values);
 
           if (this.minecraft != null) {
-            this.minecraft.setScreen(this.lastScreen);
+            this.minecraft.gui.setScreen(this.lastScreen);
           }
         }).build());
     gridlayout$rowhelper.addChild(Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
 
       if (this.minecraft != null) {
-        this.minecraft.setScreen(this.lastScreen);
+        this.minecraft.gui.setScreen(this.lastScreen);
       }
     }).build());
     gridlayout$rowhelper.getGrid().visitWidgets(this::addRenderableWidget);
@@ -84,7 +85,7 @@ public class EditConfigScreen extends Screen {
   public void onClose() {
 
     if (this.minecraft != null) {
-      this.minecraft.setScreen(this.lastScreen);
+      this.minecraft.gui.setScreen(this.lastScreen);
     }
   }
 
@@ -149,7 +150,7 @@ public class EditConfigScreen extends Screen {
           ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
           builder.add(Component.literal(key).withStyle(ChatFormatting.YELLOW).getVisualOrderText());
 
-          if (I18n.exists(s1)) {
+          if (Language.getInstance().has(s1)) {
             Component component3 = Component.translatable(s1);
             EditConfigScreen.this.font.split(component3, 150).forEach(builder::add);
             s2 = component3.getString() + "\n" + defaultComponent.getString();
@@ -245,7 +246,7 @@ public class EditConfigScreen extends Screen {
         EditConfigScreen newScreen =
             new EditConfigScreen(EditConfigScreen.this.title, pLabel, spec, specValues, values,
                                  EditConfigScreen.this, consumer);
-        Minecraft.getInstance().setScreen(newScreen);
+        Minecraft.getInstance().gui.setScreen(newScreen);
       }).build();
       this.children.add(this.button);
     }
@@ -277,7 +278,7 @@ public class EditConfigScreen extends Screen {
                 list.clear();
                 list.addAll(l);
               });
-          Minecraft.getInstance().setScreen(listConfigScreen);
+          Minecraft.getInstance().gui.setScreen(listConfigScreen);
         }
       }).bounds(10, 5, 100, 20).build();
       this.children.add(this.button);

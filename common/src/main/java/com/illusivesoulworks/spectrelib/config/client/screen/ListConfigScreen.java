@@ -55,13 +55,13 @@ public class ListConfigScreen extends Screen {
           onDone.accept(this.values);
 
           if (this.minecraft != null) {
-            this.minecraft.setScreen(this.lastScreen);
+            this.minecraft.gui.setScreen(this.lastScreen);
           }
         }).build());
     gridlayout$rowhelper.addChild(Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
 
       if (this.minecraft != null) {
-        this.minecraft.setScreen(this.lastScreen);
+        this.minecraft.gui.setScreen(this.lastScreen);
       }
     }).build());
     gridlayout$rowhelper.getGrid().visitWidgets(this::addRenderableWidget);
@@ -72,7 +72,7 @@ public class ListConfigScreen extends Screen {
   public void onClose() {
 
     if (this.minecraft != null) {
-      this.minecraft.setScreen(this.lastScreen);
+      this.minecraft.gui.setScreen(this.lastScreen);
     }
   }
 

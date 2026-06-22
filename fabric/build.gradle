@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom'
 }
 
 dependencies {
@@ -8,13 +8,13 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    compileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    compileOnly "com.terraformersmc:modmenu:$mod_menu_version"
     //runtimeOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 
-    implementation group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
-    implementation group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
-    include group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
-    include group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
+    implementation "com.electronwill.night-config:core:$nightconfig_version"
+    implementation "com.electronwill.night-config:toml:$nightconfig_version"
+    include "com.electronwill.night-config:core:$nightconfig_version"
+    include "com.electronwill.night-config:toml:$nightconfig_version"
 }
 
 sourceSets {
@@ -29,9 +29,6 @@ loom {
     def aw = file("src/main/resources/${mod_id}.classtweaker")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
-    }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
     }
     runs {
         client {
